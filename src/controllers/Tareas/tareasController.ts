@@ -14,10 +14,10 @@ class TareasController{
             end as Estado
             from Tarea t1`);
 
-            if(preventivos.recordset!=0){
+            if(preventivos.recordset.length>0){
                 res.status(200).json(preventivos.recordset);
             }else{
-                res.status(404).json({message:"Preventivos no encontrados"})
+                res.status(404).json({message:"Tareas no encontradas"})
             }
 
         }catch (error){
@@ -42,7 +42,7 @@ class TareasController{
             if(preventivos.recordset!=0){
                 res.status(200).json(preventivos.recordset);
             }else{
-                res.status(404).json({text: "Tareas no existentes"})
+                res.status(404).json({text: "Tareas del prventivo no existentes"})
             }
         }catch(error){
             res.json(error)
@@ -57,7 +57,7 @@ class TareasController{
             for(let i of tareas){await sql.query(`INSERT INTO Tarea(Descripcion) VALUES('${i}')`)}
             res.status(201).json({message:"Tarea(s) creadas correctamente"})
         }catch(error){
-            res.status(400).json(error)
+            res.json(error)
             console.log(error)
         }
     }
@@ -73,7 +73,7 @@ class TareasController{
             }
                 res.status(200).json({message:"Tareas introducidas en el preventivos"})
         }catch(error){
-            res.status(400).json({text:"Tarea ya existe en el preventivo"})
+            res.status(400).json({message:"Tarea(s) ya existente(s) en el preventivo"})
             console.log(error)
 
         }
@@ -83,7 +83,7 @@ class TareasController{
     public async deleteTarea(req:Request, res:Response){
         try{
             await sql.query(`DELETE from Tarea WHERE TareaId='${req.params.tareaid}'`)
-            res.json({message: "Tarea eliminada correctamente"})
+            res.status(200).json({message: "Tarea eliminada correctamente"})
 
         }catch(error){
             res.json(error)
@@ -97,7 +97,7 @@ class TareasController{
             await sql.query(`DELETE FROM Tarea_Preventivo WHERE PreventivoId='${req.params.preventivoid}'
             AND TareaId='${req.params.tareaid}'`)
     
-            res.json({message: "Tarea desasociada de preventivo correctamente"})
+            res.status(201).json({message: "Tarea desasociada de preventivo"})
 
         }catch(error){
             res.json(error)
@@ -110,7 +110,7 @@ class TareasController{
         try{
             await sql.query(`UPDATE Tarea SET Descripcion='${req.body.Descripcion}'
             WHERE TareaId='${req.params.tareaid}'`)
-            res.json({message:"Tarea actualizada correctamente"})
+            res.status(200).json({message:"Tarea actualizada correctamente"})
 
         }catch(error){
             res.json(error)

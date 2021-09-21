@@ -8,12 +8,10 @@ class CodigoRoutes{
         this.config();
     }
     config(){
-        this.router.get('/', codigoController.selectAllCodigos);
         this.router.get('/:seccionid', codigoController.selectCodigos);
-        this.router.get('/:seccionid/:codigoid', codigoController.selectOne)
-        this.router.post('/', codigoController.addSeccion);
-        this.router.put('/:seccionid/:codigoid', codigoController.updateSeccion);
-        this.router.delete('/:seccionid/:codigoid', codigoController.deleteSeccion);
+        this.router.post('/', codigoController.addCodigo);
+        this.router.put('/:codigoid', codigoController.updateCodigo);
+        this.router.delete('/:codigoid', codigoController.deleteCodigo);
     }
 }
 const codigoRoutes = new CodigoRoutes();

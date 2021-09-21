@@ -1,31 +1,44 @@
 import { Request, Response } from 'express';
 import sql from '../../database';
 
-class CodigoController{
-    public async selectAllCodigos(req:Request, res:Response){
-        const codigos = await sql.query(`select * from codigo`);
-        res.json(codigos.recordset);
+class CodigoController {
+    public async selectCodigos(req: Request, res: Response):Promise<void>{
+        try {
+            const codigo = await sql.query(`select * from codigo where seccionid = '${req.params.seccionid}'`);
+            if (codigo.recordset.length>0) {
+                res.status(200).json(codigo.recordset)
+            } else {
+                res.status(404).json({ message: "No existen códigos para esta sección" })
+            }
+        } catch (error) {
+            res.json(error)
+        }
     }
-    public async selectCodigos(req:Request, res:Response){
-        const codigo = await sql.query(`select * from codigo where seccionid = '${req.params.seccionid}'`);
-        res.json(codigo.recordset);
+    public async addCodigo(req: Request, res: Response):Promise<void>{
+        try{
+            await sql.query(`insert into codigo(Denominacion, Descripcion, SeccionId) values('${req.body.Denominacion}', '${req.body.Descripcion}', '${req.body.SeccionId}')`);
+            res.status(200).json({ message: "Codigo introducido correctamente" })
+
+        }catch(error){
+            res.json(error)
+            console.log(error)
+        }
     }
-    public async selectOne(req:Request, res:Response){
-        const codigo = await sql.query(`select * from codigo where seccionid = '${req.params.seccionid}' and codigoid = '${req.params.codigoid}'`);
-        res.json(codigo.recordset);
+    public async updateCodigo(req: Request, res: Response):Promise<void>{
+        try{
+        await sql.query(`update codigo set Denominacion = '${req.body.Denominacion}', Descripcion = '${req.body.Descripcion}' where CodigoId='${req.params.codigoid}'`);
+        res.status(201).json({ message: "Código modificado correctamente" });
+        }catch(error){
+            res.json(error)
+        }
     }
-    public async addSeccion(req:Request, res:Response){
-        await sql.query(`insert into codigo(Denominacion, Descripcion, SeccionId) values('${req.body.Denominacion}', '${req.body.Descripcion}', '${req.body.SeccionId}')`);
-        res.json({message:"Seccion introducida correctamente"});
-    }
-    public async updateSeccion(req:Request, res:Response){
-        await sql.query(`update codigo set Denominacion = '${req.body.Denominacion}', Descripcion = '${req.body.Descripcion}', SeccionId = ${req.body.SeccionId} 
-        where seccionId='${req.params.seccionid}' and codigoId='${req.params.codigoid}'`);
-        res.json({message:"Seccion modificada correctamente"});
-    }
-    public async deleteSeccion(req:Request, res:Response){
-        await sql.query(`delete from codigo where seccionId='${req.params.seccionid}' and codigoId='${req.params.codigoid}'`);
-        res.json({message:"Seccion eliminada correctamente"});
+    public async deleteCodigo(req: Request, res: Response):Promise<void>{
+        try{
+        await sql.query(`DELETE FROM codigo WHERE CodigoId='${req.params.codigoid}'`);
+        res.status(201).json({ message: "Código eliminado correctamente" });            
+        }catch(error){
+            res.json(error)
+        }
     }
 }
 const codigoController = new CodigoController();

@@ -8,12 +8,10 @@ class EquipoRoutes{
         this.config();
     }
     config(){
-        this.router.get('/', equipoController.selectAllEquipos);
         this.router.get('/:grupoid', equipoController.selectEquipos);
-        this.router.get('/:grupoid/:equipoid', equipoController.selectOne);
         this.router.post('/', equipoController.addEquipo);
         this.router.put('/:grupoid/:equipoid', equipoController.updateEquipo);
-        this.router.delete('/:grupoid/:equipoid', equipoController.deleteEquipo);
+        this.router.delete('/:equipoid', equipoController.deleteEquipo);
     }
 }
 const equipoRoutes = new EquipoRoutes();

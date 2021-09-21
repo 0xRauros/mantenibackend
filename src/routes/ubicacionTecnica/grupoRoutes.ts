@@ -8,12 +8,10 @@ class GrupoRoutes{
         this.config();
     }
     config(){
-        this.router.get('/', grupoController.selectAllGrupos);
         this.router.get('/:codigoid', grupoController.selectGrupos);
-        this.router.get('/:codigoid/:grupoid', grupoController.selectOne)
         this.router.post('/', grupoController.addGrupo);
-        this.router.put('/:codigoid/:grupoid', grupoController.updateGrupo);
-        this.router.delete('/:codigoid/:grupoid', grupoController.deleteGrupo);
+        this.router.put('/:grupoid', grupoController.updateGrupo);
+        this.router.delete('/:grupoid', grupoController.deleteGrupo);
     }
 }
 const grupoRoutes = new GrupoRoutes();

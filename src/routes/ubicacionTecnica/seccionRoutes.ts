@@ -8,12 +8,10 @@ class SeccionRoutes{
         this.config();
     }
     config(){
-        this.router.get('/', seccionController.selectAllSecciones);
         this.router.get('/:zonaid', seccionController.selectSecciones);
-        this.router.get('/:zonaid/:seccionid', seccionController.selectOne)
         this.router.post('/', seccionController.addSeccion);
-        this.router.put('/:zonaid/:seccionid', seccionController.updateSeccion);
-        this.router.delete('/:zonaid/:seccionid', seccionController.deleteSeccion);
+        this.router.put('/:seccionid', seccionController.updateSeccion);
+        this.router.delete('/:seccionid', seccionController.deleteSeccion);
     }
 }
 const seccionRoutes = new SeccionRoutes();

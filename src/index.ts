@@ -12,6 +12,7 @@ import utpreventivoRoutes from './routes/UT_Preventivo/utpreventivoRoutes'
 import preventivoRoutes from './routes/preventivo/preventivoRoutes'
 import ordendetrabajoRoutes from './routes/OrdenDeTrabajo/ordendetrabajoRoutes'
 import tareasRoutes from './routes/Tareas/tareasRoutes'
+import ubicacionRoutes from './routes/ubicacionTecnica/ubicacionRoutes';
 
 class Server {
 
@@ -39,6 +40,7 @@ class Server {
         this.app.use('/codigo', codigoRoutes);
         this.app.use('/grupo', grupoRoutes);
         this.app.use('/equipo', equipoRoutes);
+        this.app.use('/ubicaciontecnica', ubicacionRoutes);
 
         this.app.use('/utpreventivo', utpreventivoRoutes);
         this.app.use('/preventivo', preventivoRoutes);

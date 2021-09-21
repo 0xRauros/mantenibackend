@@ -10,6 +10,9 @@ class PlantaRoutes{
     }
     config(){
         this.router.get('/', plantaController.selectAll);
+        this.router.post('/', plantaController.createPlanta)
+        this.router.put('/:plantaid',plantaController.updatePlanta)
+        this.router.delete('/:plantaid', plantaController.deletePlanta)
     }
 }
 const plantaRoutes = new PlantaRoutes();
