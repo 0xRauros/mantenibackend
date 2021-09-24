@@ -13,6 +13,7 @@ import preventivoRoutes from './routes/preventivo/preventivoRoutes'
 import ordendetrabajoRoutes from './routes/OrdenDeTrabajo/ordendetrabajoRoutes'
 import tareasRoutes from './routes/Tareas/tareasRoutes'
 import ubicacionRoutes from './routes/ubicacionTecnica/ubicacionRoutes';
+import encabezadoRoutes from './routes/Encabezado/encabezadoRoutes';
 
 class Server {
 
@@ -47,6 +48,8 @@ class Server {
         this.app.use('/ordendetrabajo', ordendetrabajoRoutes);
 
         this.app.use('/tarea', tareasRoutes);
+
+        this.app.use('/encabezado', encabezadoRoutes)
     }
 
     start(): void {

@@ -5,7 +5,7 @@ class UbicacionController{
 
     public async selectUbicaciones(req:Request, res:Response){
     try{
-        const ubicaciones = await sql.query(`select p.Descripcion as 'Planta',
+        const ubicaciones = await sql.query(`select p.Denominacion as 'Planta',
         ISNULL(a.Descripcion,'-') as 'Area',
         ISNULL(z.Descripcion,'-') as 'Zona',
         ISNULL(s.Descripcion,'-') as 'Seccion', 
