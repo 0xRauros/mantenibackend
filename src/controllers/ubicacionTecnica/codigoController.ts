@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class CodigoController {
-    public async selectCodigos(req: Request, res: Response):Promise<void>{
+    public async selectCodigos(req: Request, res: Response):Promise<any>{
         try {
             const codigo = await sql.query(`select * from codigo where seccionid = '${req.params.seccionid}'`);
             if (codigo.recordset.length>0) {

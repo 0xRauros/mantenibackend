@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class SeccionController{
-    public async selectSecciones(req: Request, res: Response):Promise<void>{
+    public async selectSecciones(req: Request, res: Response):Promise<any>{
         try {
             const secciones = await sql.query(`select * from seccion where zonaid = '${req.params.zonaid}'`);
             if (secciones.recordset.length>0) {

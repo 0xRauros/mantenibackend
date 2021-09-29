@@ -3,7 +3,7 @@ import sql from '../../database'
 
 class PlantaController{
 
-    public async selectAll(req:Request, res:Response):Promise<void>{
+    public async selectAll(req:Request, res:Response):Promise<any>{
         try{
             const plantas = await sql.query("select * from planta");
             res.json(plantas.recordset)

@@ -3,7 +3,7 @@ import sql from '../../database';
 
 class UbicacionController{
 
-    public async selectUbicaciones(req:Request, res:Response){
+    public async selectUbicaciones(req:Request, res:Response):Promise<any>{
     try{
         const ubicaciones = await sql.query(`select p.Denominacion as 'Planta',
         ISNULL(a.Descripcion,'-') as 'Area',

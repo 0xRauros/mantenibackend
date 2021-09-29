@@ -3,7 +3,7 @@ import sql from '../../database';
 
 class AreaController{
 
-    public async selectAreas(req: Request, res: Response):Promise<void>{
+    public async selectAreas(req: Request, res: Response):Promise<any>{
         try {
             const areas = await sql.query(`SELECT * FROM area WHERE PlantaId = '${req.params.plantaid}'`);
             if (areas.recordset.length>0) {

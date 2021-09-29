@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class GrupoController{
-    public async selectGrupos(req: Request, res: Response):Promise<void> {
+    public async selectGrupos(req: Request, res: Response):Promise<any> {
         try {
             const grupos = await sql.query(`select * from grupo where codigoid = '${req.params.codigoid}'`);
             if (grupos.recordset.length>0) {

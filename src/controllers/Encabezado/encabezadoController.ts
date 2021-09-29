@@ -24,7 +24,8 @@ class EncabezadoController {
     /**Get para trabajador sin password */
     public async selectTrabajador(req: Request, res: Response) {
         try {
-            const trabajador = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.trabajador WHERE planta=${req.params.planta} AND codigoTrabajador like '${req.params.codigoTrabajador}'`)
+            const {planta, codigoTrabajador} = req.params
+            const trabajador = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.trabajador WHERE Planta=${planta} AND CodigoTrabajador like '${codigoTrabajador}'`)
 
             if (trabajador.recordset.length > 0) {
                 res.status(200).json(trabajador.recordset)
@@ -39,7 +40,9 @@ class EncabezadoController {
     /**Devuelve el usuario si existe en la tabla usuario si no existe devulve una respuesta vacía */
     public async selectUsuario(req: Request, res: Response) {
         try {
-            const usuario = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.usuario WHERE codigo=${req.params.codigo}`)
+            const {codigo} = req.params
+            const usuario = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.usuario WHERE Codigo='${codigo}'`)
+            
             res.status(200).json(usuario.recordset)
         } catch (error) {
             res.json(error)
@@ -49,9 +52,9 @@ class EncabezadoController {
     public async login(req: Request, res: Response) {
         try {
             const { Codigo, Password } = req.params;
-            const usuario = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.usuario WHERE codigo = ${Codigo}`)
+            const usuario = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.usuario WHERE Codigo='${Codigo}'`)
             if (usuario.recordset.length > 0) {
-                bcrypt.compare(Password, usuario.recordset[0]['Password']).then(function (result: any) {
+                bcrypt.compare(Password, usuario.recordset[0].Password).then(function (result: any) {
                     if (result == true) {
                         res.status(200).json(usuario.recordset[0])
                     } else {
@@ -63,7 +66,6 @@ class EncabezadoController {
             }
         } catch (error) {
             res.json(error)
-            console.log(error)
         }
     }
     /** Cambio de contraseña de los registros de la tabla usuario*/

@@ -5,7 +5,7 @@ import sql from '../../database';
 class TareasController{
 
     /**Get para todas las tareas */
-    public async selectAllTareas(req:Request, res:Response){
+    public async selectAllTareas(req:Request, res:Response):Promise<any>{
         try{
             const preventivos = await sql.query(`select *,
             case when exists (SELECT * from Tarea_Preventivo t2 WHERE t1.tareaid=t2.TareaId)
@@ -27,7 +27,7 @@ class TareasController{
     }
 
     /**Get para las tareas de un preventivo pasado por parámetro */
-    public async selectAllTareasPreventivo(req:Request, res:Response){
+    public async selectAllTareasPreventivo(req:Request, res:Response):Promise<any>{
         try{
             const {preventivoid} = req.params
             const preventivos = await sql.query(`select t.TareaId, t.Descripcion,
@@ -51,7 +51,7 @@ class TareasController{
     }
 
     /** Insert para tarea o tareas a la tabla de tareas pasadas en array de string */
-    public async insertTarea(req:Request, res:Response){
+    public async insertTarea(req:Request, res:Response):Promise<void>{
         try{
             let tareas:string[] = req.body
             for(let i of tareas){await sql.query(`INSERT INTO Tarea(Descripcion) VALUES('${i}')`)}
@@ -63,7 +63,7 @@ class TareasController{
     }
 
     /**Insert tarea en preventivo */
-    public async insertTareaPrev(req:Request, res:Response){
+    public async insertTareaPrev(req:Request, res:Response):Promise<void>{
         try{
             let id:number = req.body.preventivo
             let tar:string[] = req.body.tarea
@@ -80,7 +80,7 @@ class TareasController{
     }
 
     /**Eliminar tarea */
-    public async deleteTarea(req:Request, res:Response){
+    public async deleteTarea(req:Request, res:Response):Promise<void>{
         try{
             await sql.query(`DELETE from Tarea WHERE TareaId='${req.params.tareaid}'`)
             res.status(200).json({message: "Tarea eliminada correctamente"})
@@ -92,7 +92,7 @@ class TareasController{
     }
 
     /**Eliminar tarea de preventivo */
-    public async deleteTareaPrev(req:Request, res:Response){
+    public async deleteTareaPrev(req:Request, res:Response):Promise<void>{
         try{
             await sql.query(`DELETE FROM Tarea_Preventivo WHERE PreventivoId='${req.params.preventivoid}'
             AND TareaId='${req.params.tareaid}'`)
@@ -106,7 +106,7 @@ class TareasController{
     }
 
     /**Actualizar descripción de tarea*/
-    public async updateTarea(req:Request, res:Response){ 
+    public async updateTarea(req:Request, res:Response):Promise<void>{ 
         try{
             await sql.query(`UPDATE Tarea SET Descripcion='${req.body.Descripcion}'
             WHERE TareaId='${req.params.tareaid}'`)
