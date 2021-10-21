@@ -28,7 +28,7 @@ class EncabezadoController {
             const trabajador = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.trabajador WHERE Planta=${planta} AND CodigoTrabajador like '${codigoTrabajador}'`)
 
             if (trabajador.recordset.length > 0) {
-                res.status(200).json(trabajador.recordset)
+                res.status(200).json(trabajador.recordset[0])
             } else {
                 res.status(404).json({ message: "Trabajador no encontrado" })
             }
@@ -43,7 +43,7 @@ class EncabezadoController {
             const {codigo} = req.params
             const usuario = await db.query(`SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.usuario WHERE Codigo='${codigo}'`)
             
-            res.status(200).json(usuario.recordset)
+            res.status(200).json(usuario.recordset[0])
         } catch (error) {
             res.json(error)
         }

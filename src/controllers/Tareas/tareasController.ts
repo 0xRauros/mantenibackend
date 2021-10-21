@@ -25,7 +25,15 @@ class TareasController{
             console.log(error)
         }
     }
-
+    /** Obtiene el id de la última tarea insertada */
+    public async selectLastTarea(req:Request, res:Response):Promise<any>{
+        try{
+            const id = await sql.query(`SELECT MAX(TareaId) AS id FROM Tarea`)
+            res.json(id.recordset[0].id)
+        }catch(error){
+            console.log(error)
+        }
+    }
     /**Get para las tareas de un preventivo pasado por parámetro */
     public async selectAllTareasPreventivo(req:Request, res:Response):Promise<any>{
         try{
@@ -39,10 +47,10 @@ class TareasController{
             inner join preventivo p on p.preventivoid = tp.preventivoid
             where p.preventivoid = '${preventivoid}'`);
     
-            if(preventivos.recordset!=0){
+            if(preventivos.recordset.length>0){
                 res.status(200).json(preventivos.recordset);
             }else{
-                res.status(404).json({text: "Tareas del prventivo no existentes"})
+                res.status(404).json({message: "Tareas del preventivo no existentes"})
             }
         }catch(error){
             res.json(error)
@@ -71,7 +79,7 @@ class TareasController{
             for (let i = 0; i < tar.length; i++) {
                 await sql.query(`INSERT INTO Tarea_Preventivo(PreventivoId, TareaId) VALUES('${id}','${tar[i]}')`)
             }
-                res.status(200).json({message:"Tareas introducidas en el preventivos"})
+                res.status(200).json({message:"Tareas introducidas en el preventivo"})
         }catch(error){
             res.status(400).json({message:"Tarea(s) ya existente(s) en el preventivo"})
             console.log(error)

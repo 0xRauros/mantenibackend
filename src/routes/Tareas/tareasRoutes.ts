@@ -10,6 +10,7 @@ class TareasRoutes{
     config(){
         this.router.get('/', tareasController.selectAllTareas);
         this.router.get('/preventivo/:preventivoid', tareasController.selectAllTareasPreventivo);
+        this.router.get('/tarea/last', tareasController.selectLastTarea)
         this.router.post('/tarea', tareasController.insertTarea);
         this.router.post('/tarea/preventivo', tareasController.insertTareaPrev);
         this.router.delete('/tarea/:tareaid', tareasController.deleteTarea);
