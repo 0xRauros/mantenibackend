@@ -87,7 +87,7 @@ class SeccionController {
             res.json(error)
         }
     }
-
+    //Comprueba si el preventivo pasado tiene OT con fecha finalizada, si tiene fecha devuelve true y la fecha, en caso contrario, devuelve solamente false
     public async comprobarOTFin(req: Request, res: Response) {
         try {
 
