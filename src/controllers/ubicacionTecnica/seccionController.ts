@@ -24,7 +24,7 @@ class SeccionController{
     }
     public async updateSeccion(req:Request, res:Response):Promise<void>{
         await sql.query(`UPDATE seccion set Denominacion = '${req.body.Denominacion}', Descripcion = '${req.body.Descripcion}' where SeccionId='${req.params.seccionid}'`);
-        res.json({message:"Seccion modificada correctamente"});
+        res.json({message:"Sección modificada correctamente"});
     }
     public async deleteSeccion(req:Request, res:Response):Promise<void>{
         try{
