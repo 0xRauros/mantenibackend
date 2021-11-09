@@ -125,6 +125,28 @@ class TareasController{
             console.log(error)
         }
     }
+
+    public async selectTareaDeOrden(req: Request, res: Response) {
+        const tareas = await sql.query(`SELECT * FROM TareaDeOT WHERE OrdenId = ${req.params.ordenid}`)
+        res.status(200).json(tareas.recordset)
+
+    }
+
+    public async updateTareaOt(req: Request, res: Response) {
+        try {
+            await sql.query(`UPDATE TareaDeOt SET Estado = CASE 
+            WHEN Estado = 0 then 1
+            WHEN Estado = 1 then 0
+            END
+            WHERE TareaId=${req.params.tareaid}`)
+
+            res.status(200).json({message:"Estado cambiado correctamente"})
+
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
 }
 const tareasController = new TareasController();
 export default tareasController;

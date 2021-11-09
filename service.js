@@ -4,7 +4,7 @@ const path = require('path');
 // Create a new service object
 var svc = new Service({
     name: 'API MANTENIMIENTO',
-    description: 'API MANNTENIMIENTO 3011',
+    description: 'API MANTENIMIENTO 3011',
     script: "./build/index.js",
     env: {
         name: "HOME",

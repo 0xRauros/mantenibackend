@@ -9,6 +9,7 @@ class OperarioRoutes{
     }
     config(){
         this.router.get('/trabajador', operarioController.selectTrabajadores);
+        this.router.get('/trabajador/:codigo', operarioController.selectDatosDeOperario);
         this.router.get('/usuario', operarioController.selectUsuarios)
         this.router.post('/usuario/:CodigoTrabajador', operarioController.convertirAUsuario6)
         this.router.delete('/usuario/:CodigoTrabajador', operarioController.eliminarAlUsuarioDeTipo6)

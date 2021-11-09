@@ -93,15 +93,16 @@ class SeccionController {
 
             let preventivo = req.params.utprevid
             const OT = await sql.query(`if exists(
-                select ot.FechaTerminado from OrdenDeTrabajo ot 
+                select ot.OrdenId from OrdenDeTrabajo ot 
                 inner join UTPreventivo_OrdenDeTrabajo uto on uto.OrdenId=ot.OrdenId
                 inner join UT_Preventivo ut on ut.UtPrevId = uto.UTPrevId
                 where ut.UtPrevId= ${preventivo}) 
                 begin 
-                    select 'true' as 'Estado', FechaTerminado from OrdenDeTrabajo ot 
+                    select top 1 'true' as 'Estado', ot.FechaValidado from OrdenDeTrabajo ot 
                 inner join UTPreventivo_OrdenDeTrabajo uto on uto.OrdenId=ot.OrdenId
                 inner join UT_Preventivo ut on ut.UtPrevId = uto.UTPrevId
                 where ut.UtPrevId= ${preventivo}
+                order by ot.OrdenId DESC
                 end 
                 else
                 begin

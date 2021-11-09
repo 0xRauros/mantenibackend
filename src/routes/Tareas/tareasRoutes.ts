@@ -16,6 +16,8 @@ class TareasRoutes{
         this.router.delete('/tarea/:tareaid', tareasController.deleteTarea);
         this.router.delete('/tarea/:preventivoid/:tareaid', tareasController.deleteTareaPrev);
         this.router.put('/tarea/:tareaid', tareasController.updateTarea);
+        this.router.get('/ordendetrabajo/:ordenid', tareasController.selectTareaDeOrden)        
+        this.router.put('/ordendetrabajo/:tareaid', tareasController.updateTareaOt)
     }
 }
 const tareasRoutes = new TareasRoutes();

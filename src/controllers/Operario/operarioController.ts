@@ -15,6 +15,19 @@ class OperarioController {
             console.log(error)
         }
     }
+
+    /**Obtiene los registros que aparecen en tabla trabajadores y en la tabla usuario con tipo usuario 6*/
+    public async selectDatosDeOperario(req: Request, res: Response): Promise<any> {
+        try {
+            const trabajadores = await db.query(`SELECT Nombre FROM [DATOS7QB_ISRI_SPAIN].[dbo].[Usuario] where Codigo='${req.params.codigo}'`)
+            if (trabajadores.recordset.length > 0) {
+                res.status(200).json(trabajadores.recordset[0])
+            }
+        } catch (error) {
+            res.status(404).json(error)
+            console.log(error)
+        }
+    }   
     /**Obtiene los registros de la tabla de usuarios con el tipo usuario 6 */
     public async selectUsuarios(req: Request, res: Response): Promise<any> {
         try {
