@@ -81,8 +81,7 @@ class Foo {
 
     constructor(){
 
-        //'0 6 * * *'
-        this.cronJob = new CronJob('* * * * *', async () => {
+        this.cronJob = new CronJob('0 6 * * *', async () => {
             try{
                 await this.ejecucion();
             }catch(e){
