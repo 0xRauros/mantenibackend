@@ -9,7 +9,7 @@ import codigoRoutes from './routes/ubicacionTecnica/codigoRoutes'
 import grupoRoutes from './routes/ubicacionTecnica/grupoRoutes'
 import equipoRoutes from './routes/ubicacionTecnica/equipoRoutes'
 import utpreventivoRoutes from './routes/UT_Preventivo/utpreventivoRoutes'
-import preventivoRoutes from './routes/Preventivo/preventivoRoutes'
+import preventivoRoutes from './routes/preventivo/preventivoRoutes'
 import ordendetrabajoRoutes from './routes/OrdenDeTrabajo/ordendetrabajoRoutes'
 import tareasRoutes from './routes/Tareas/tareasRoutes'
 import ubicacionRoutes from './routes/ubicacionTecnica/ubicacionRoutes';
@@ -32,8 +32,8 @@ class Server {
     }
 
     config(): void {
-        //this.app.set('port', process.env.PORT || 3000);
-        this.app.set('port', process.env.PORT || 3011);
+        this.app.set('port', process.env.PORT || 3000);
+        //this.app.set('port', process.env.PORT || 3011);
         this.app.use(morgan('dev'));
         this.app.use(cors());
         this.app.use(express.json());
@@ -81,8 +81,7 @@ class Foo {
 
     constructor(){
 
-        //'0 6 * * *'
-        this.cronJob = new CronJob('* * * * *', async () => {
+        this.cronJob = new CronJob('0 6 * * *', async () => {
             try{
                 await this.ejecucion();
             }catch(e){

@@ -8,6 +8,8 @@ class OrdenDeTrabajoRoutes{
         this.config();
     }
     config(){
+
+        //Preventivo
         this.router.get('/preventivo/datos/:ordenid', ordendetrabajoController.selectOrdenPreventiva); 
         this.router.get('/preventivo/planificada', ordendetrabajoController.selectPreventivoPlanificada);
         this.router.put('/preventivo/planificada/:ordenid', ordendetrabajoController.updatePlanificada);
@@ -17,6 +19,13 @@ class OrdenDeTrabajoRoutes{
         this.router.put('/preventivo/terminada/:ordenid', ordendetrabajoController.updateTerminada);
         this.router.get('/preventivo/validada', ordendetrabajoController.selectPreventivoValidada);
         this.router.put('/preventivo/ordendetrabajo/:ordenid', ordendetrabajoController.updateOrden);
+
+        //Correctivo
+        this.router.post('/correctivo',ordendetrabajoController.crearCorrectivo)
+        this.router.get('/correctivo/:PersonaResponsable', ordendetrabajoController.getCorrectivosPersonales)
+
+
+
     }
 }
 const ordendetrabajoRoutes = new OrdenDeTrabajoRoutes();
