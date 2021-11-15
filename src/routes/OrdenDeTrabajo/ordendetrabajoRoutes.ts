@@ -10,22 +10,23 @@ class OrdenDeTrabajoRoutes{
     config(){
 
         //Preventivo
-        this.router.get('/preventivo/datos/:ordenid', ordendetrabajoController.selectOrdenPreventiva); 
-        this.router.get('/preventivo/planificada', ordendetrabajoController.selectPreventivoPlanificada);
-        this.router.put('/preventivo/planificada/:ordenid', ordendetrabajoController.updatePlanificada);
-        this.router.get('/preventivo/pendiente', ordendetrabajoController.selectPreventivoPendiente);        
-        this.router.put('/preventivo/pendiente/:ordenid', ordendetrabajoController.updatePendiente);
-        this.router.get('/preventivo/terminada', ordendetrabajoController.selectPreventivoTerminada);
-        this.router.put('/preventivo/terminada/:ordenid', ordendetrabajoController.updateTerminada);
-        this.router.get('/preventivo/validada', ordendetrabajoController.selectPreventivoValidada);
-        this.router.put('/preventivo/ordendetrabajo/:ordenid', ordendetrabajoController.updateOrden);
 
+        this.router.get('/preventivo/planificada', ordendetrabajoController.selectPreventivoPlanificada);
+        this.router.get('/preventivo/pendiente', ordendetrabajoController.selectPreventivoPendiente);        
+        this.router.get('/preventivo/terminada', ordendetrabajoController.selectPreventivoTerminada);
+        this.router.get('/preventivo/validada', ordendetrabajoController.selectPreventivoValidada);
+ 
         //Correctivo
         this.router.post('/correctivo',ordendetrabajoController.crearCorrectivo)
-        this.router.get('/correctivo/:PersonaResponsable', ordendetrabajoController.getCorrectivosPersonales)
+        this.router.get('/correctivo', ordendetrabajoController.getCorrectivos)
 
-
-
+        //General
+        this.router.put('/preventivo/planificada/:ordenid', ordendetrabajoController.updatePlanificada);
+        this.router.put('/preventivo/pendiente/:ordenid', ordendetrabajoController.updatePendiente);
+        this.router.put('/preventivo/terminada/:ordenid', ordendetrabajoController.updateTerminada);        
+        this.router.get('/:ordenid', ordendetrabajoController.selectOrden);        
+        this.router.put('/preventivo/ordendetrabajo/:ordenid', ordendetrabajoController.updateOrden);
+        this.router.get('/',ordendetrabajoController.getOrdenes )
     }
 }
 const ordendetrabajoRoutes = new OrdenDeTrabajoRoutes();

@@ -13,12 +13,17 @@ case when ot.Area is null then p.Descripcion
     end as 'UbicacionTecnica',
     eq.Denominacion as 'Equipo',
     a.Descripcion as 'Localizacion',
-    db.Nombre,
+    db.Nombre as 'PersonaResponsable',
 	e.Descripcion as 'Estado',
+    ot.EstadoId,
 	t.Descripcion as 'Tipo',
+    ot.TipoId,
     ot.ComentarioResponsable,
-    ot.ComentarioPreventivo,
-    ot.tiempoEmpleado,
+    ot.Comentario,
+    ot.Plazo,
+    ot.TiempoEmpleado,
+    ot.TituloCorrectivo,
+    ot.DescripcionCorrectivo,
     ot.FechaCreacion,
     ot.FechaPendiente,
     ot.FechaTerminado,
@@ -32,7 +37,7 @@ case when ot.Area is null then p.Descripcion
     inner join EstadoOt e on e.EstadoId=ot.EstadoId
     inner join TipoDeOrden t on t.TipoId = ot.TipoId
     inner join Preventivo pre on pre.PreventivoId = ot.Preventivo
-    inner join Periodicidad per on per.PeriodicidadId = pre.PeriodicidadId
+    left join Periodicidad per on per.PeriodicidadId = pre.PeriodicidadId
     left join DATOS7QB_ISRI_SPAIN.dbo.usuario da on da.Codigo = ot.OperarioId
     left join DATOS7QB_ISRI_SPAIN.dbo.usuario db on db.Codigo = ot.PersonaResponsable
     inner join Prioridad pri on pri.PrioridadId = ot.PrioridadId
@@ -56,15 +61,17 @@ case when ot.Area is null then p.Descripcion
         end as 'UbicacionTecnica',
         eq.Denominacion as 'Equipo',
         a.Descripcion as 'Localizacion',
-        db.Nombre,
+        db.Nombre as 'PersonaResponsable',
         e.Descripcion as 'Estado',
+        ot.EstadoId,
         t.Descripcion as 'Tipo',
+        ot.TipoId,
         ot.ComentarioResponsable,
         ot.Plazo,
-        ot.Resolucion,
+        ot.Comentario,
         ot.TituloCorrectivo,
         ot.DescripcionCorrectivo,
-        ot.tiempoEmpleado,
+        ot.TiempoEmpleado,
         ot.FechaCreacion,
         ot.FechaPendiente,
         ot.FechaTerminado,
@@ -90,9 +97,11 @@ case when ot.Area is null then p.Descripcion
 
 class OrdenDeTrabajoController{
 
-    public async selectOrdenPreventiva(req:Request, res:Response){
-        const orden = await sql.query(consulta + ` WHERE OrdenId='${req.params.ordenid}'`)
-        res.status(200).json(orden.recordset[0])
+    public async selectOrden(req:Request, res:Response){
+        //const orden = await sql.query(consulta + ` WHERE ot.OrdenId=${req.params.ordenid}`)
+        console.log(req.params)
+        const orden = await sql.query(`SELECT * FROM OrdenDeTrabajo WHERE OrdenId=81`)
+        res.status(200).json(orden.recordset)
     }
 
     //Obtiene las OT de los preventivos planificados
@@ -103,12 +112,12 @@ class OrdenDeTrabajoController{
     //Actualiza los datos cuando pasa de estado planificada a pendiente
     public async updatePlanificada(req:Request, res:Response){
 
-         let comentarioResponsable = ''
-        if(req.body.comentarioResponsable==null){ comentarioResponsable=''} 
-        else {comentarioResponsable = req.body.comentarioResponsable }
+         let ComentarioResponsable = ''
+        if(req.body.ComentarioResponsable==null){ ComentarioResponsable=''} 
+        else {ComentarioResponsable = req.body.ComentarioResponsable }
 
-        await sql.query(`UPDATE OrdenDeTrabajo SET OperarioId='${req.body.trabajador}', PrioridadId='${req.body.prioridad}', FechaPendiente = CAST(GETDATE() AS date), ComentarioResponsable='${comentarioResponsable}' , EstadoId=2,
-        ComentarioPreventivo=NULL, TiempoEmpleado=0, FechaTerminado=NULL
+        await sql.query(`UPDATE OrdenDeTrabajo SET OperarioId='${req.body.OperarioId}', PrioridadId='${req.body.PrioridadId}', FechaPendiente = CAST(GETDATE() AS date), ComentarioResponsable='${ComentarioResponsable}' , EstadoId=2,
+        Comentario=NULL, TiempoEmpleado=0, FechaTerminado=NULL
         WHERE OrdenId='${req.params.ordenid}'`);
         res.json({ message: `Orden de trabajo actualizada de planificada a pendiente` });
     }
@@ -122,11 +131,11 @@ class OrdenDeTrabajoController{
     //Actualiza los datos cuando pasa de estado planificada a pendiente
     public async updatePendiente(req: Request, res: Response) {
 
-        let comentario = ''
-       if(req.body.comentario== null) {comentario = ''}
-       else {comentario = req.body.comentario}
+        let Comentario = ''
+       if(req.body.Comentario== null) {Comentario = ''}
+       else {Comentario = req.body.Comentario}
 
-        await sql.query(`UPDATE OrdenDeTrabajo SET ComentarioPreventivo='${comentario}', tiempoEmpleado=${req.body.tiempoEmpleado} ,  FechaTerminado = CAST(GETDATE() AS date) , EstadoId=3
+        await sql.query(`UPDATE OrdenDeTrabajo SET Comentario='${Comentario}', TiempoEmpleado=${req.body.TiempoEmpleado} ,  FechaTerminado = CAST(GETDATE() AS date) , EstadoId=3
         WHERE OrdenId='${req.params.ordenid}'`);
         res.json({ message: `Orden de trabajo actualizada de pendiente a terminada` });
 
@@ -153,15 +162,15 @@ class OrdenDeTrabajoController{
 
     //Actualiza la OT sin cambiar de estado
     public async updateOrden(req: Request, res: Response) {
-        let comentario = ''
-       if(req.body.comentario== null) {comentario = ''}
-       else {comentario = req.body.comentario}
+        let Comentario = ''
+       if(req.body.Comentario== null) {Comentario = ''}
+       else {Comentario = req.body.Comentario}
 
-       let comentarioResponsable = ''
-       if(req.body.comentarioResponsable== null) {comentarioResponsable = ''}
-       else {comentarioResponsable = req.body.comentarioResponsable}
+       let ComentarioResponsable = ''
+       if(req.body.ComentarioResponsable== null) {ComentarioResponsable = ''}
+       else {ComentarioResponsable = req.body.ComentarioResponsable}
 
-        await sql.query(`UPDATE OrdenDeTrabajo SET ComentarioPreventivo='${comentario}', tiempoEmpleado=${req.body.tiempoEmpleado}, ComentarioResponsable='${comentarioResponsable}'
+        await sql.query(`UPDATE OrdenDeTrabajo SET Comentario='${Comentario}', TiempoEmpleado=${req.body.TiempoEmpleado}, ComentarioResponsable='${ComentarioResponsable}'
         WHERE OrdenId='${req.params.ordenid}'`);
         res.json({ message: `Orden de trabajo actualizada de pendiente a terminada` });
     }
@@ -183,29 +192,66 @@ class OrdenDeTrabajoController{
             PersonaResponsable = req.body.PersonaResponsable
             PrioridadId = req.body.PrioridadId
 
-            await sql.query(`INSERT INTO OrdenDeTrabajo(TituloCorrectivo, DescripcionCorrectivo, FechaCreacion, PersonaResponsable, EstadoId, PrioridadId, TipoId, Preventivo ${insert})
-            VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), ${PersonaResponsable}, 1, ${PrioridadId},2, 0  ${insert1})`)
+            const ultimoId = await sql.query(`INSERT INTO OrdenDeTrabajo(TituloCorrectivo, DescripcionCorrectivo, FechaCreacion, PersonaResponsable, EstadoId, PrioridadId, TipoId, Preventivo ${insert})
+            VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), ${PersonaResponsable}, 1, ${PrioridadId},2, 0  ${insert1});
+            INSERT INTO UTPreventivo_OrdenDeTrabajo(UTPrevId, OrdenId) VALUES(0,SCOPE_IDENTITY())`)
 
-            res.status(200).json({message:"Se ha creado la orden correctiva"})
+            res.status(200).json({message:"Se ha creado la orden de trabajo correctiva"})
 
         }catch(e){
             console.error(e)
         }
     }
-        //Obtener ordenes personales
-    public async getCorrectivosPersonales(req:Request, res:Response){
+    //Obtener ordenes correctivas de los 4 estados
+    public async getCorrectivos(req:Request, res:Response){
         try{
-            let PersonaResponsable = req.params.PersonaResponsable
-            const correctivos = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.PersonaResponsable = ${PersonaResponsable} `)
+            const correctivos = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2`)
 
-            if(correctivos.recordset.length > 0){
-                res.status(200).json(correctivos.recordset)               
-            }else {
-                res.status(404).json({message:"No se han encontrado ordenes correctivas para esa persona"})
-            }
+            const planificadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=1`)
+            const pendientes = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=2`)
+            const terminadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=3`)
+            const validadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=4`)
+
+            res.status(200).json([{ordenes:planificadas.recordset,"nombre": 'Planificadas'}, {ordenes:pendientes.recordset,"nombre": 'Pendientes'},{ordenes:terminadas.recordset,"nombre": 'Terminadas'}, {ordenes:validadas.recordset,"nombre": 'Validadas'} ])
         }catch(e){
             console.error(e)
         }
+    }
+
+    //Get para todas las ordenes
+    public async getOrdenes(req:Request, res:Response) {
+        try{
+            const ordenes = await sql.query(`SELECT ot.OrdenId, 
+            pre.Descripcion as 'Preventivo', 
+            case when ot.Area is null then p.Descripcion 
+                 when ot.Zona is null then concat(p.Denominacion, '/', a.Descripcion) 
+                 when ot.Seccion is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Descripcion)
+                 when ot.Codigo is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Denominacion, '/', s.Descripcion) 
+                 when ot.Grupo is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Denominacion, '/', s.Denominacion, '/', c.Descripcion ) 
+                 when ot.Equipo is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Denominacion, '/', s.Denominacion, '/', c.Denominacion, '/', g.Descripcion ) 
+                 else concat(p.Denominacion,'/', a.Denominacion,'/' ,z.Denominacion ,'/', s.Denominacion,'/', c.Denominacion,'/', g.Denominacion, '/', eq.Denominacion) 
+                end as 'UbicacionTecnica'
+                FROM OrdenDeTrabajo ot 
+                inner join EstadoOt e on e.EstadoId=ot.EstadoId
+                inner join TipoDeOrden t on t.TipoId = ot.TipoId
+                inner join Preventivo pre on pre.PreventivoId = ot.Preventivo
+                left join DATOS7QB_ISRI_SPAIN.dbo.usuario da on da.Codigo = ot.OperarioId
+                left join DATOS7QB_ISRI_SPAIN.dbo.usuario db on db.Codigo = ot.PersonaResponsable
+                inner join Prioridad pri on pri.PrioridadId = ot.PrioridadId
+                inner join Planta p on p.plantaid = ot.Planta
+                left join Area a on a.areaid = ot.area
+                left join Zona z on Z.ZonaId = ot.Zona
+                left join Seccion s on s.SeccionId = ot.Seccion
+                left join Codigo c on c.CodigoId = ot.Codigo
+                left join Grupo g on g.GrupoId = ot.Grupo
+                left join Equipo eq on eq.equipoid = ot.Equipo`)
+
+            res.status(200).json(ordenes.recordset)
+        }
+         catch(e){
+             console.error(e)
+         }
+
     }
 
 
