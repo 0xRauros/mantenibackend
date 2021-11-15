@@ -53,9 +53,6 @@ class Ordenes {
             from UT_Preventivo utp
             WHERE utp.UtPrevId = ${preventivoId};
             SELECT SCOPE_IDENTITY() as 'id'`)
-
-            console.log('HA CREADO ORDEN');
-
             return ultimoId.recordset[0];
 
         }catch(e){
@@ -80,8 +77,6 @@ class Ordenes {
             INNER JOIN Tarea_Preventivo TP ON T.TareaId=TP.TareaId
             INNER JOIN Preventivo P ON P.PreventivoId=TP.PreventivoId
             where p.PreventivoId = ( select x.Preventivo from ordendetrabajo x  where x.OrdenId = ${ulitmoid})`)
-
-            console.log('HA CREADO TAREAS');
 
         }catch(e){
             console.error(e)

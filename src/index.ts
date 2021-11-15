@@ -24,16 +24,30 @@ import ordenes from './crearOrdenes/ordenes';
 class Server {
 
     public app: Application;
+    hoy:Date = new Date();
+
+    cronJob: CronJob;
 
     constructor(){
         this.app = express();
         this.config();
         this.routes();
+        this.cronJob = new CronJob('* * * * *', async () => {
+            try{
+                await this.ejecucion();
+            }catch(e){
+                console.error(e)
+                console.log('ERROR')
+            }
+        });
+        if(!this.cronJob.running){
+            this.cronJob.start();
+        }
     }
 
     config(): void {
-        this.app.set('port', process.env.PORT || 3000);
-        //this.app.set('port', process.env.PORT || 3011);
+        //this.app.set('port', process.env.PORT || 3000);
+        this.app.set('port', process.env.PORT || 3011);
         this.app.use(morgan('dev'));
         this.app.use(cors());
         this.app.use(express.json());
@@ -69,30 +83,6 @@ class Server {
         });
     }
 
-}
-const server = new Server();
-server.start();
-
-class Foo {
-
-    hoy:Date = new Date();
-
-    cronJob: CronJob;
-
-    constructor(){
-
-        this.cronJob = new CronJob('0 6 * * *', async () => {
-            try{
-                await this.ejecucion();
-            }catch(e){
-                console.error(e)
-                console.log('ERROR')
-            }
-        });
-        if(!this.cronJob.running){
-            this.cronJob.start();
-        }
-    }
     async ejecucion(){
 
         try{
@@ -128,10 +118,8 @@ class Foo {
                 }
                 this.hoy.setHours(0,0,0,0)
                 fecha.setHours(0,0,0,0);
-                    
-                console.log(fecha)
 
-                if(fecha.getTime() === this.hoy.getTime()){
+                if(fecha.getTime() == this.hoy.getTime()){
                     //Hoy tendrá que crear OT
                     let id = await ordenes.crearOT(preventivoId)
                     await ordenes.asociarPreventivoAOT(preventivoId, id.id)
@@ -142,5 +130,7 @@ class Foo {
             console.error(e)
         }
     }
+
 }
-const foo = new Foo();
+const server = new Server();
+server.start();
