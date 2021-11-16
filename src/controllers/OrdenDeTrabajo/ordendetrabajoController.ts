@@ -98,10 +98,8 @@ case when ot.Area is null then p.Descripcion
 class OrdenDeTrabajoController{
 
     public async selectOrden(req:Request, res:Response){
-        //const orden = await sql.query(consulta + ` WHERE ot.OrdenId=${req.params.ordenid}`)
-        console.log(req.params)
-        const orden = await sql.query(`SELECT * FROM OrdenDeTrabajo WHERE OrdenId=81`)
-        res.status(200).json(orden.recordset)
+        const orden = await sql.query(consulta + ` WHERE ot.OrdenId=${req.params.ordenid}`)
+        res.status(200).json(orden.recordset[0])
     }
 
     //Obtiene las OT de los preventivos planificados
@@ -193,8 +191,7 @@ class OrdenDeTrabajoController{
             PrioridadId = req.body.PrioridadId
 
             const ultimoId = await sql.query(`INSERT INTO OrdenDeTrabajo(TituloCorrectivo, DescripcionCorrectivo, FechaCreacion, PersonaResponsable, EstadoId, PrioridadId, TipoId, Preventivo ${insert})
-            VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), ${PersonaResponsable}, 1, ${PrioridadId},2, 0  ${insert1});
-            INSERT INTO UTPreventivo_OrdenDeTrabajo(UTPrevId, OrdenId) VALUES(0,SCOPE_IDENTITY())`)
+            VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), ${PersonaResponsable}, 1, ${PrioridadId},2, 0  ${insert1})`)
 
             res.status(200).json({message:"Se ha creado la orden de trabajo correctiva"})
 

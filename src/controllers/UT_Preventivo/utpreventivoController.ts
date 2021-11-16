@@ -13,7 +13,8 @@ class SeccionController {
              when utp.Equipo is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Denominacion, '/', s.Denominacion, '/', c.Denominacion, '/', g.Descripcion ) 
              else concat(p.Denominacion,'/', a.Denominacion,'/' ,z.Denominacion ,'/', s.Denominacion,'/', c.Denominacion,'/', g.Denominacion, '/', e.Denominacion) 
         end as 'UbicacionTecnica', 
-        pre.Descripcion as 'Preventivo', per.Descripcion as 'Periodicidad', per.Dias as 'Dias', ISNULL(CAST(utp.fechainicio AS NVARCHAR), 'SIN FECHA') as 'FechaInicio'
+        pre.Descripcion as 'Preventivo', per.Descripcion as 'Periodicidad', per.Dias as 'Dias', ISNULL(CAST(utp.fechainicio AS NVARCHAR), 'SIN FECHA') as 'FechaInicio',
+        s.Descripcion as 'Linea'
         from UT_Preventivo utp
         left join Planta p on p.PlantaId = utp.Planta 
         left join Area a on a.AreaId = utp.Area

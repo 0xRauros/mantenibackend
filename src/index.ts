@@ -32,7 +32,7 @@ class Server {
         this.app = express();
         this.config();
         this.routes();
-        this.cronJob = new CronJob('* * * * *', async () => {
+        this.cronJob = new CronJob('0 6 * * *', async () => {
             try{
                 await this.ejecucion();
             }catch(e){
@@ -46,7 +46,6 @@ class Server {
     }
 
     config(): void {
-        //this.app.set('port', process.env.PORT || 3000);
         this.app.set('port', process.env.PORT || 3011);
         this.app.use(morgan('dev'));
         this.app.use(cors());
