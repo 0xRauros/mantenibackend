@@ -15,7 +15,9 @@ var svc = new Service({
         '--max_old_space_size=4096'
     ]
 });
+svc._directory="." ;
 svc.on('install',function(){
+  console.log('instalado SEMIDIOS');
   svc.start();
 });
 svc.on('uninstall',function(){
@@ -23,9 +25,8 @@ svc.on('uninstall',function(){
     console.log('The service exists: ',svc.exists);
   });
 
-// Listen for the "install" event, which indicates the
+// Listen for the "uninstall" event, which indicates the
 // process is available as a service.
 
+svc.uninstall();
 svc.install();
-
-//svc.uninstall();

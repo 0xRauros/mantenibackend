@@ -15,6 +15,7 @@ var svc = new Service({
         '--max_old_space_size=4096'
     ]
 });
+svc._directory="." ,
 svc.on('install',function(){
   svc.start();
 });
