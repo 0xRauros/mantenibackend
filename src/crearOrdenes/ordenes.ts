@@ -36,7 +36,7 @@ class Ordenes {
 
     public async crearOT(preventivoId:number){
         try{
-            const ultimoId= await sql.query(`INSERT INTO OrdenDeTrabajo (FechaCreacion, EstadoId, TipoId,PrioridadId, OperarioId, Planta, Area, Zona, Seccion, Codigo, Grupo, Equipo, Preventivo)
+            const ultimoId= await sql.query(`INSERT INTO OrdenDeTrabajo (FechaCreacion, EstadoId, TipoId,PrioridadId, PersonaResponsable, Planta, Area, Zona, Seccion, Codigo, Grupo, Equipo, Preventivo)
             SELECT CAST(GETDATE() AS date),
             1,
             1,

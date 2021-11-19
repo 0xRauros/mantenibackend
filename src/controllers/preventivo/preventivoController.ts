@@ -6,7 +6,8 @@ class PreventivoController{
 
     /** Obtener todos los preventivos */
     public async selectAllPreventivos(req:Request, res:Response){
-        const preventivos = await sql.query(`SELECT * FROM Preventivo`);
+        const preventivos = await sql.query(`SELECT pre.*, per.Descripcion as 'Periodicidad' FROM Preventivo pre 
+        INNER JOIN Periodicidad per on pre.PeriodicidadId = per.PeriodicidadId`);
         res.json(preventivos.recordset);
     }
     /** Obtiene un preventivo en concreto */
@@ -25,7 +26,7 @@ class PreventivoController{
     }
     /** Actualiza un preventivo en concreto */
     public async updatePreventivo(req:Request, res:Response){
-        await sql.query(`update preventivo set Descripcion = '${req.body.Descripcion}', PeriodicidadId = '${req.body.PeriodicidadId}' where PreventivoId = '${req.params.preventivoid}'`);
+       await sql.query(`update preventivo set Descripcion = '${req.body.Descripcion}', PeriodicidadId = ${req.body.PeriodicidadId} where PreventivoId = ${req.params.preventivoid}`);
         res.json({message:"Preventivo modificado correctamente"});
     }
     /** Elimina un preventivo en concreto */

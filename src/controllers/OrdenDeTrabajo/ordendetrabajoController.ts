@@ -62,6 +62,7 @@ case when ot.Area is null then p.Descripcion
         eq.Denominacion as 'Equipo',
         a.Descripcion as 'Localizacion',
         db.Nombre as 'PersonaResponsable',
+        ot.PersonaResponsable as 'PersonaResponsableId',
         e.Descripcion as 'Estado',
         ot.EstadoId,
         t.Descripcion as 'Tipo',
@@ -85,7 +86,7 @@ case when ot.Area is null then p.Descripcion
         inner join TipoDeOrden t on t.TipoId = ot.TipoId
         inner join Preventivo pre on pre.PreventivoId = ot.Preventivo
         left join DATOS7QB_ISRI_SPAIN.dbo.usuario da on da.Codigo = ot.OperarioId
-        left join DATOS7QB_ISRI_SPAIN.dbo.usuario db on db.Codigo = ot.PersonaResponsable
+        left join DATOS7QB_ISRI_SPAIN.dbo.trabajador db on db.CodigoTrabajador = ot.PersonaResponsable
         inner join Prioridad pri on pri.PrioridadId = ot.PrioridadId
         inner join Planta p on p.plantaid = ot.Planta
         left join Area a on a.areaid = ot.area
@@ -110,12 +111,14 @@ class OrdenDeTrabajoController{
     //Actualiza los datos cuando pasa de estado planificada a pendiente
     public async updatePlanificada(req:Request, res:Response){
 
+
+        console.log(req.body)
+
          let ComentarioResponsable = ''
         if(req.body.ComentarioResponsable==null){ ComentarioResponsable=''} 
         else {ComentarioResponsable = req.body.ComentarioResponsable }
 
-        await sql.query(`UPDATE OrdenDeTrabajo SET OperarioId='${req.body.OperarioId}', PrioridadId='${req.body.PrioridadId}', FechaPendiente = CAST(GETDATE() AS date), ComentarioResponsable='${ComentarioResponsable}' , EstadoId=2,
-        Comentario=NULL, TiempoEmpleado=0, FechaTerminado=NULL
+        await sql.query(`UPDATE OrdenDeTrabajo SET OperarioId='${req.body.OperarioId}', PrioridadId='${req.body.PrioridadId}', FechaPendiente = CAST(GETDATE() AS date), ComentarioResponsable='${ComentarioResponsable}' , EstadoId=2, TiempoEmpleado=0
         WHERE OrdenId='${req.params.ordenid}'`);
         res.json({ message: `Orden de trabajo actualizada de planificada a pendiente` });
     }
@@ -128,6 +131,8 @@ class OrdenDeTrabajoController{
 
     //Actualiza los datos cuando pasa de estado planificada a pendiente
     public async updatePendiente(req: Request, res: Response) {
+
+        console.log(req.body)
 
         let Comentario = ''
        if(req.body.Comentario== null) {Comentario = ''}
@@ -190,8 +195,14 @@ class OrdenDeTrabajoController{
             PersonaResponsable = req.body.PersonaResponsable
             PrioridadId = req.body.PrioridadId
 
-            const ultimoId = await sql.query(`INSERT INTO OrdenDeTrabajo(TituloCorrectivo, DescripcionCorrectivo, FechaCreacion, PersonaResponsable, EstadoId, PrioridadId, TipoId, Preventivo ${insert})
-            VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), ${PersonaResponsable}, 1, ${PrioridadId},2, 0  ${insert1})`)
+            await sql.query(`if exists ( SELECT * FROM DATOS7QB_ISRI_SPAIN.dbo.usuario da WHERE da.Codigo = ${PersonaResponsable} and da.TipoUsuario = 6 )
+                INSERT INTO OrdenDeTrabajo(TituloCorrectivo, DescripcionCorrectivo, FechaCreacion, FechaPendiente, PersonaResponsable, OperarioId, EstadoId, PrioridadId, TipoId, Preventivo ${insert})
+                VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), CAST(GetDate() as Date), ${PersonaResponsable}, ${PersonaResponsable},2, ${PrioridadId},2, 0  ${insert1})
+            else 
+                INSERT INTO OrdenDeTrabajo(TituloCorrectivo, DescripcionCorrectivo, FechaCreacion, PersonaResponsable, EstadoId, PrioridadId, TipoId, Preventivo ${insert})
+                VALUES('${req.body.TituloCorrectivo}', '${req.body.DescripcionCorrectivo}', CAST(GetDate() as Date), ${PersonaResponsable}, 1, ${PrioridadId},2, 0  ${insert1})`)
+
+            await sql.query(``)
 
             res.status(200).json({message:"Se ha creado la orden de trabajo correctiva"})
 
@@ -202,9 +213,7 @@ class OrdenDeTrabajoController{
     //Obtener ordenes correctivas de los 4 estados
     public async getCorrectivos(req:Request, res:Response){
         try{
-            const correctivos = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2`)
-
-            const planificadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=1`)
+            const planificadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=1 `)
             const pendientes = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=2`)
             const terminadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=3`)
             const validadas = await sql.query(`${ordenCorrectiva} WHERE ot.TipoId=2 and ot.EstadoId=4`)
@@ -227,7 +236,11 @@ class OrdenDeTrabajoController{
                  when ot.Grupo is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Denominacion, '/', s.Denominacion, '/', c.Descripcion ) 
                  when ot.Equipo is null then concat(p.Denominacion, '/', a.Denominacion, '/', z.Denominacion, '/', s.Denominacion, '/', c.Denominacion, '/', g.Descripcion ) 
                  else concat(p.Denominacion,'/', a.Denominacion,'/' ,z.Denominacion ,'/', s.Denominacion,'/', c.Denominacion,'/', g.Denominacion, '/', eq.Denominacion) 
-                end as 'UbicacionTecnica'
+                end as 'UbicacionTecnica',
+                ot.DescripcionCorrectivo,
+                ot.TituloCorrectivo,
+                ot.FechaCreacion,
+                ot.FechaValidado
                 FROM OrdenDeTrabajo ot 
                 inner join EstadoOt e on e.EstadoId=ot.EstadoId
                 inner join TipoDeOrden t on t.TipoId = ot.TipoId
@@ -241,7 +254,8 @@ class OrdenDeTrabajoController{
                 left join Seccion s on s.SeccionId = ot.Seccion
                 left join Codigo c on c.CodigoId = ot.Codigo
                 left join Grupo g on g.GrupoId = ot.Grupo
-                left join Equipo eq on eq.equipoid = ot.Equipo`)
+                left join Equipo eq on eq.equipoid = ot.Equipo
+                WHERE ot.TipoId=${req.params.tipoid}`)
 
             res.status(200).json(ordenes.recordset)
         }
@@ -250,7 +264,17 @@ class OrdenDeTrabajoController{
          }
 
     }
+    //Elimina Orden
+    public async deleteOrden(req:Request, res:Response){
+        try{
+            await sql.query(`DELETE FROM OrdenDeTrabajo WHERE OrdenId=${req.params.ordenid}`)
+            res.status(200).json({message:"Orden eliminada correctamente"})
+        }catch(e){
+            res.status(400).json({message: e + " Error"})
+            console.error(e)
+        }
 
+    }
 
 }
 const ordendetrabajoController = new OrdenDeTrabajoController();

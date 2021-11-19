@@ -26,7 +26,8 @@ class OrdenDeTrabajoRoutes{
         this.router.put('/preventivo/terminada/:ordenid', ordendetrabajoController.updateTerminada);        
         this.router.get('/:ordenid', ordendetrabajoController.selectOrden);        
         this.router.put('/preventivo/ordendetrabajo/:ordenid', ordendetrabajoController.updateOrden);
-        this.router.get('/',ordendetrabajoController.getOrdenes )
+        this.router.get('/tipo/:tipoid',ordendetrabajoController.getOrdenes )
+        this.router.delete('/:ordenid', ordendetrabajoController.deleteOrden)
     }
 }
 const ordendetrabajoRoutes = new OrdenDeTrabajoRoutes();
