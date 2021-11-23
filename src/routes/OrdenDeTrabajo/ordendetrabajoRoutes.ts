@@ -11,6 +11,7 @@ class OrdenDeTrabajoRoutes{
 
         //Preventivo
 
+        this.router.get('/preventivo', ordendetrabajoController.getPreventivos)
         this.router.get('/preventivo/planificada', ordendetrabajoController.selectPreventivoPlanificada);
         this.router.get('/preventivo/pendiente', ordendetrabajoController.selectPreventivoPendiente);        
         this.router.get('/preventivo/terminada', ordendetrabajoController.selectPreventivoTerminada);
@@ -27,6 +28,7 @@ class OrdenDeTrabajoRoutes{
         this.router.get('/:ordenid', ordendetrabajoController.selectOrden);        
         this.router.put('/preventivo/ordendetrabajo/:ordenid', ordendetrabajoController.updateOrden);
         this.router.get('/tipo/:tipoid',ordendetrabajoController.getOrdenes )
+        this.router.put('/:ordenid', ordendetrabajoController.updateOrdenDeTrabajo)
         this.router.delete('/:ordenid', ordendetrabajoController.deleteOrden)
     }
 }
