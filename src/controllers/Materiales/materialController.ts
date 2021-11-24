@@ -11,7 +11,8 @@ class MaterialController{
 
     public async updateMaterial(req:Request, res:Response){
         try{
-            await sql.query(`UPDATE Material SET Descripcion='${req.body.Descripcion}' WHERE MatId=${req.params.matid}`)
+            console.log(req.body)
+            await sql.query(`UPDATE Material SET Material='${req.body.Material}', Descripcion='${req.body.Descripcion}' WHERE MatId=${req.params.matid}`)
             res.status(200).json({message: "Se ha actualizado el material correctamente"})
         }
         catch(e){
@@ -24,7 +25,7 @@ class MaterialController{
 
     public async addMaterial(req:Request, res:Response){
         try{       
-            await sql.query(`INSERT INTO Material(Descripcion) VALUES('${req.body.Descripcion}')`)
+            await sql.query(`INSERT INTO Material(Material, Descripcion) VALUES('${req.body.Material}','${req.body.Descripcion}')`)
             res.status(200).json({message: "Se ha introducido el material correctamente"})
         }catch(e){
             console.log(e)
