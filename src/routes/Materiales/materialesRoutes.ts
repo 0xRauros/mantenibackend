@@ -12,15 +12,7 @@ class MaterialesRoutes{
         this.router.get('/', materialController.selectMateriales); 
         this.router.post('/', materialController.addMaterial)
         this.router.put('/:matid',materialController.updateMaterial)
-        this.router.delete('/:matid', materialController.deleteMaterial)
-
-
-        //OrdenDeTrabajo
-        this.router.get('/ordendetrabajo/:ordenid', materialController.getMaterialDeOrden); 
-        this.router.delete('/ordendetrabajo/:gastoid', materialController.deleteMaterialDeOrden); 
-        this.router.post('/ordendetrabajo/:ordenid', materialController.addMaterialAOT); 
-
-
+        this.router.delete('/:matid', materialController.deleteMaterial) 
     }
 }
 const materialesRoutes = new MaterialesRoutes();

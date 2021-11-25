@@ -22,6 +22,7 @@ import { CronJob } from 'cron';
 import ordenes from './crearOrdenes/ordenes';
 import estadosRoutes from './routes/Estados/estadosRoutes';
 import periodicidadRoutes from './routes/Periodicidad/periodicidadRoutes';
+import gastoMaterialRoutes from './routes/GastoMaterial/gastoMaterialRoutes';
 
 class Server {
 
@@ -69,6 +70,7 @@ class Server {
         this.app.use('/preventivo', preventivoRoutes);
         this.app.use('/ordendetrabajo', ordendetrabajoRoutes);
         this.app.use('/material', materialesRoutes);
+        this.app.use('/gastomaterial', gastoMaterialRoutes);
         this.app.use('/estado', estadosRoutes)
         this.app.use('/tarea', tareasRoutes);
         this.app.use('/encabezado', encabezadoRoutes)

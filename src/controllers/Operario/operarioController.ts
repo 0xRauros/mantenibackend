@@ -31,7 +31,7 @@ class OperarioController {
     /**Obtiene los registros de la tabla de usuarios con el tipo usuario 6 */
     public async selectUsuarios(req: Request, res: Response): Promise<any> {
         try {
-            const usuarios = await db.query(`SELECT * FROM [DATOS7QB_ISRI_SPAIN].[dbo].[usuario] WHERE tipoUsuario=6`)
+            const usuarios = await db.query(`SELECT * FROM [DATOS7QB_ISRI_SPAIN].[dbo].[usuario] WHERE tipoUsuario=6 OR tipoUsuario=5`)
             res.status(200).json(usuarios.recordset)
         } catch (error) {
             res.json(error)
