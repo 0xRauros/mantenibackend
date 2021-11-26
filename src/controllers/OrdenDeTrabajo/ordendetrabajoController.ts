@@ -216,7 +216,9 @@ class OrdenDeTrabajoController {
     //Elimina Orden
     public async deleteOrden(req: Request, res: Response) {
         try {
-            await sql.query(`DELETE FROM OrdenDeTrabajo WHERE OrdenId=${req.params.ordenid}`)
+            await sql.query(`DELETE FROM UTPreventivo_OrdenDeTrabajo WHERE OrdenId=${req.params.ordenid};
+            DELETE FROM OrdenDeTrabajo WHERE OrdenId=${req.params.ordenid};
+            `)
             res.status(200).json({ message: "Orden eliminada correctamente" })
         } catch (e) {
             res.status(400).json({ message: e + " Error" })
