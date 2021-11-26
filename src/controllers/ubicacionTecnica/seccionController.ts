@@ -2,9 +2,23 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class SeccionController{
+
+    public async getSecciones(req: Request, res: Response):Promise<any>{
+        try {
+            const secciones = await sql.query(`SELECT * FROM seccion`);
+            if (secciones.recordset.length>0) {
+                res.json(secciones.recordset);
+            } else {
+                res.status(404).json({ message: "No existen secciones para esta zona" })
+            }
+        } catch (error) {
+            res.json(error)
+        }
+    }
+
     public async selectSecciones(req: Request, res: Response):Promise<any>{
         try {
-            const secciones = await sql.query(`select * from seccion where zonaid = '${req.params.zonaid}'`);
+            const secciones = await sql.query(`SELECT * FROM seccion WHERE zonaid = '${req.params.zonaid}'`);
             if (secciones.recordset.length>0) {
                 res.json(secciones.recordset);
             } else {
