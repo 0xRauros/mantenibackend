@@ -9,6 +9,7 @@ class SeccionRoutes{
     }
     config(){
         this.router.get('/:zonaid', seccionController.selectSecciones);
+        this.router.get('/', seccionController.getSecciones);
         this.router.post('/', seccionController.addSeccion);
         this.router.put('/:seccionid', seccionController.updateSeccion);
         this.router.delete('/:seccionid', seccionController.deleteSeccion);
