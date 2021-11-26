@@ -4,7 +4,7 @@ import cors from 'cors';
 import plantaRoutes from './routes/ubicacionTecnica/plantaRoutes';
 import areaRoutes from './routes/ubicacionTecnica/areaRoutes'
 import zonaRoutes from './routes/ubicacionTecnica/zonaRoutes'
-import seccionRoutes from './routes/ubicacionTecnica/seccionRoutes'
+import seccionRoutes from './routes/ubicacionTecnica/seccionroutes'
 import codigoRoutes from './routes/ubicacionTecnica/codigoRoutes'
 import grupoRoutes from './routes/ubicacionTecnica/grupoRoutes'
 import equipoRoutes from './routes/ubicacionTecnica/equipoRoutes'
