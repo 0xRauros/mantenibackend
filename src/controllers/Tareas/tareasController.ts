@@ -147,6 +147,17 @@ class TareasController{
         }
 
     }
+
+    public async deleteTareaOt(req: Request, res: Response){
+        try {
+            await sql.query(`DELETE FROM TareaDeOT WHERE TareaId=${req.params.tareaid}`)
+
+            res.status(200).json({message:"Estado cambiado correctamente"})
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 }
 const tareasController = new TareasController();
 export default tareasController;
