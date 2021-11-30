@@ -124,6 +124,7 @@ class Server {
                 if(fecha.getTime() == this.hoy.getTime()){
                     //Hoy tendrá que crear OT
                     let id = await ordenes.crearOT(preventivoId)
+                    console.log('Orden Creada')
                     await ordenes.asociarPreventivoAOT(preventivoId, id.id)
                     await ordenes.crearTareasDeOt(id.id)
                }

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import tareasController from '../../controllers/Tareas/tareasController';
+import tareasController from '../../controllers/Tareas/tareascontroller';
 
 class TareasRoutes{
     public router:Router = Router();
