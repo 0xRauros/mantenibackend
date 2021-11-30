@@ -77,20 +77,6 @@ class MaterialController{
             res.status(400).json(error)
         }
     }
-
-    
-    //Dar por descontado el gasto
-    public async updateDescontado(req:Request, res:Response){
-        try{
-            console.log("HOLA")
-            //await sql.query(`UPDATE GastoMaterial SET Descontado=1 WHERE Descontado=0`)
-            res.status(200).json({message:"Se ha dado por descontado correctamente"})
-        }catch(e)
-        {
-           console.log(e) 
-        }
-    }
-
 }
 const materialController = new MaterialController();
 export default materialController;
