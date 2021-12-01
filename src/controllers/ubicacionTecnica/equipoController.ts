@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class EquipoController {
+    
     public async selectEquipos(req: Request, res: Response): Promise<any> {
         try {
             const equipos = await sql.query(`select * from equipo where grupoid = '${req.params.grupoid}'`);

@@ -4,7 +4,7 @@ import sql from '../../database';
 
 class EstadosController{
 
-    /** Obtener todos los estados de la tabla  */
+    /** Obtener todos los estados de la tabla estado ot; se utilizará para definir el estado de las ordenes de trabajo */
     public async selectEstados(req:Request, res:Response){
         const estados = await sql.query(`SELECT * FROM EstadoOt`);
         res.json(estados.recordset);

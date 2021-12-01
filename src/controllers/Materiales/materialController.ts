@@ -24,6 +24,7 @@ class MaterialController{
         res.status
     }
 
+    //Añade un material a la tabla
     public async addMaterial(req:Request, res:Response){
         try{       
             await sql.query(`INSERT INTO Material(Material, Descripcion) VALUES('${req.body.Material}','${req.body.Descripcion}')`)
@@ -33,7 +34,7 @@ class MaterialController{
             res.status(404).json({message:"No se ha introducido el material"})
         }
     }
-
+    //Elimina el material con id definido por parametro
     public async deleteMaterial(req:Request, res:Response){
         try{
             await sql.query(`DELETE FROM Material WHERE MatId=${req.params.matid}`)
@@ -41,40 +42,6 @@ class MaterialController{
         }catch(e){
             console.log(e)
             res.status(404).json({message:"No se ha eliminado el material"})
-        }
-    }
-
-    public async deleteMaterialDeOrden(req:Request, res:Response){
-        try {
-            await sql.query(`DELETE FROM GastoMaterial WHERE GastoId=${req.params.gastoid}`)
-            res.status(200).json({message: 'Gasto eliminado correctamente'})
-
-        } catch(error){
-            console.log(error)
-        }
-    }
-
-    public async addMaterialAOT(req:Request, res:Response){
-        try{
-            await sql.query(`INSERT INTO GastoMaterial(OrdenId, MatId, Cantidad, FechaYHora, OperarioId, Descontado) VALUES(${req.params.ordenid}, ${req.body.matid}, ${req.body.cantidad}, GETDATE(), ${req.body.operarioid}, 0)`)
-            res.status(200).json({ message: 'Se ha introducido el gasto de material' })
-        } catch (error) {
-            res.status(400).json(error)
-        }
-    }
-
-    //Obtiene el gasto general de todas las OT
-    public async getGastoMaterial(req:Request, res:Response){
-        try{
-            const gastomaterial = await sql.query(`SELECT gm.GastoId, ma.Material, ma.Descripcion, gm.Cantidad, gm.OrdenId, convert(varchar,gm.FechaYHora, 20) as Fecha, usu.Nombre FROM GastoMaterial gm
-            INNER JOIN OrdenDeTrabajo ot on ot.OrdenId = gm.OrdenId
-            INNER JOIN Material ma on ma.MatId = gm.MatId
-            INNER JOIN DATOS7QB_ISRI_SPAIN.dbo.usuario usu on usu.Codigo= gm.OperarioId
-            WHERE gm.Descontado=0`)
-            res.status(200).json(gastomaterial.recordset)
-
-        } catch(error){
-            res.status(400).json(error)
         }
     }
 }

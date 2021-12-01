@@ -20,6 +20,7 @@ class PeriodicidadController{
         }
     }
 
+    //Actualiza la periodicidad
     public async updatePeriodicidad(req:Request, res:Response){
         try{
             await sql.query(`UPDATE Periodicidad SET Descripcion='${req.body.Descripcion}', Dias='${req.body.Dias}' WHERE PeriodicidadId=${req.params.periodicidadid}`)
@@ -31,6 +32,7 @@ class PeriodicidadController{
         }
     }
 
+    //Elimina la periodicidad con periodicidadid pasada por paramétro
     public async deletePeriodicidad(req:Request, res:Response){
         try{
             await sql.query(`DELETE FROM Periodicidad WHERE PeriodicidadId=${req.params.periodicidadid}`)

@@ -4,7 +4,7 @@ import sql from '../../database';
 
 class TareasController{
 
-    /**Get para todas las tareas */
+    /**Get para todas las tareas; si existe la tarea se mostrará como asignada. En caso contrario, se mostrará como no asignada */
     public async selectAllTareas(req:Request, res:Response):Promise<any>{
         try{
             const preventivos = await sql.query(`select *,
@@ -34,7 +34,7 @@ class TareasController{
             console.log(error)
         }
     }
-    /**Get para las tareas de un preventivo pasado por parámetro */
+    /**Get para las tareas de un preventivo pasado por parámetro; si esta asociada a un preventivo se mostrará como asignada. En caso contrario, se mostrará como no asignada*/
     public async selectAllTareasPreventivo(req:Request, res:Response):Promise<any>{
         try{
             const {preventivoid} = req.params

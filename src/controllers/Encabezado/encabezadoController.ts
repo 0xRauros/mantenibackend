@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
 
 class EncabezadoController {
 
-    /**Get para todas las tareas */
+    /**Get para todas las plantas  */
     public async selectAllPlantas(req: Request, res: Response) {
         try {
             const plantas = await db.query(`select * from DATOS7QB_ISRI_SPAIN.dbo.planta`);

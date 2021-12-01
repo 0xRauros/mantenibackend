@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class ZonaController {
+    //Obtiene las zonas de un determinado área pasado por parámetro
     public async selectZonas(req: Request, res: Response): Promise<any> {
         try {
             const zonas = await sql.query(`select * from Zona where areaid='${req.params.areaid}'`);
@@ -15,6 +16,7 @@ class ZonaController {
             console.log(error)
         }
     }
+    //Añade una zona a una determinada área
     public async addZona(req: Request, res: Response): Promise<void> {
         try {
             await sql.query(`insert into Zona(Denominacion, Descripcion, AreaId) 
@@ -25,6 +27,7 @@ class ZonaController {
             console.log(error)
         }
     }
+    //Actualiza una zona pasada por parámetro
     public async updateZona(req: Request, res: Response): Promise<void> {
         try {
             await sql.query(`UPDATE zona SET Denominacion = '${req.body.Denominacion}', Descripcion = '${req.body.Descripcion}' WHERE ZonaId = '${req.params.zonaid}'`);
@@ -33,6 +36,7 @@ class ZonaController {
             res.json(error)
         }
     }
+    //Elimina una determinada zona pasada por parámetro.
     public async deleteZona(req: Request, res: Response): Promise<void> {
         try {
             await sql.query(`DELETE FROM zona WHERE ZonaId ='${req.params.zonaid}'`);

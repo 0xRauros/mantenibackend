@@ -14,6 +14,7 @@ case when ot.Area is null then p.Descripcion
     eq.Denominacion as 'Equipo',
     a.Descripcion as 'Localizacion',
     db.Nombre as 'PersonaResponsable',
+    ot.PersonaResponsable as 'PersonaResponsableId',
 	e.Descripcion as 'Estado',
     ot.EstadoId,
     s.Descripcion as 'Linea',
@@ -39,7 +40,7 @@ case when ot.Area is null then p.Descripcion
     inner join Preventivo pre on pre.PreventivoId = ot.Preventivo
     left join Periodicidad per on per.PeriodicidadId = pre.PeriodicidadId
     left join DATOS7QB_ISRI_SPAIN.dbo.usuario da on da.Codigo = ot.OperarioId
-    left join DATOS7QB_ISRI_SPAIN.dbo.usuario db on db.Codigo = ot.PersonaResponsable
+    left join DATOS7QB_ISRI_SPAIN.dbo.trabajador db on db.CodigoTrabajador like ot.PersonaResponsable
     inner join Prioridad pri on pri.PrioridadId = ot.PrioridadId
     inner join Planta p on p.plantaid = ot.Planta
     left join Area a on a.areaid = ot.area
@@ -49,7 +50,6 @@ case when ot.Area is null then p.Descripcion
     left join Grupo g on g.GrupoId = ot.Grupo
     left join Equipo eq on eq.equipoid = ot.Equipo`
 class OrdenDeTrabajoController {
-    //Queries para ordenes preventivas
     //Obtiene las OT de los preventivos planificados
     public async selectPreventivoPlanificada(req: Request, res: Response) {
         const ordendetrabajo = await sql.query(consulta + ` where ot.estadoid=1 and ot.tipoid=1`);
@@ -75,8 +75,6 @@ class OrdenDeTrabajoController {
         const ordendetrabajo = await sql.query(consulta + where);
         res.json(ordendetrabajo.recordset);
     }
-
-    //Queries para ordenes correctivas
     //Crear orden correctiva, si quien la crea es un operario de mantenimiento, se le asigna a el mismo y pasa a estado 2 pendiente
     public async crearCorrectivo(req: Request, res: Response) {
         try {
@@ -123,10 +121,6 @@ class OrdenDeTrabajoController {
             console.error(e)
         }
     }
-
-
-    //Queries para Ordenes Correctivas y Preventivas
-
     //Actualiza los datos cuando pasa de estado planificada a pendiente
     public async updatePlanificada(req: Request, res: Response) {
 
@@ -141,8 +135,6 @@ class OrdenDeTrabajoController {
 
     //Actualiza los datos cuando pasa de estado planificada a pendiente
     public async updatePendiente(req: Request, res: Response) {
-
-        console.log(req.body)
 
         let Comentario = ''
         if (req.body.Comentario == null) { Comentario = '' }
@@ -213,7 +205,7 @@ class OrdenDeTrabajoController {
         }
     }
     
-    //Elimina Orden
+    //Elimina Orden; elimina de la tabla para ordenes y de la tabla donde se asocia un preventivo con ut a una orden
     public async deleteOrden(req: Request, res: Response) {
         try {
             await sql.query(`DELETE FROM UTPreventivo_OrdenDeTrabajo WHERE OrdenId=${req.params.ordenid};

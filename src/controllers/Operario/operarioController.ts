@@ -3,7 +3,7 @@ import db from '../../databse2';
 const bcrypt = require('bcrypt');
 
 class OperarioController {
-    /**Obtiene los registros que aparecen en tabla trabajadores y en la tabla usuario con tipo usuario 6*/
+    /**Obtiene los registros que aparecen en tabla trabajadores*/
     public async selectTrabajadores(req: Request, res: Response): Promise<any> {
         try {
             const trabajadores = await db.query(`SELECT * FROM [DATOS7QB_ISRI_SPAIN].[dbo].[Trabajador]`)
@@ -16,7 +16,7 @@ class OperarioController {
         }
     }
 
-    /**Obtiene los registros que aparecen en tabla trabajadores y en la tabla usuario con tipo usuario 6*/
+    /**Obtiene los datos del usuario con codigo pasado por parámetro*/
     public async selectDatosDeOperario(req: Request, res: Response): Promise<any> {
         try {
             const trabajadores = await db.query(`SELECT Nombre FROM [DATOS7QB_ISRI_SPAIN].[dbo].[Usuario] where Codigo='${req.params.codigo}'`)
@@ -28,7 +28,7 @@ class OperarioController {
             console.log(error)
         }
     }   
-    /**Obtiene los registros de la tabla de usuarios con el tipo usuario 6 */
+    /**Obtiene los registros de la tabla de usuarios con el tipo usuario 6 y tipo 5 */
     public async selectUsuarios(req: Request, res: Response): Promise<any> {
         try {
             const usuarios = await db.query(`SELECT * FROM [DATOS7QB_ISRI_SPAIN].[dbo].[usuario] WHERE tipoUsuario=6 OR tipoUsuario=5`)
@@ -45,7 +45,7 @@ class OperarioController {
             const { CodigoTrabajador } = req.params          
             let password = await db.query(`SELECT Password FROM [DATOS7QB_ISRI_SPAIN].[dbo].[trabajador] WHERE CodigoTrabajador like '${CodigoTrabajador}'`)
             const salt = await bcrypt.genSalt(10);
-            
+            //Encripta la contraseña antes de insertarla
             password = password.recordset[0].Password
             password = await bcrypt.hash(password, salt);
             password = password.toString();

@@ -4,6 +4,7 @@ class SeccionController {
 
     public async selectAllUtPreventivos(req: Request, res: Response) {
  
+        //Obtiene los preventivos con su ubicación técnica, la descripción del preventivo su fecha de inicio y su línea.
         let  consulta = `select utp.utprevid,
         case when utp.Area is null then p.Descripcion 
              when utp.Zona is null then concat(p.Denominacion, '/', a.Descripcion) 
@@ -116,7 +117,7 @@ class SeccionController {
             console.log(error)
         }
     }
-
+    //Actualiza la fecha de un preventivo con fecha de inicio
     public async updatePreventivo(req:Request, res:Response){
         try{
             await sql.query(`update ut_preventivo set fechainicio='${req.body.FechaInicio}' where utprevid='${req.params.utprevid}'`)

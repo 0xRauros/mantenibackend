@@ -4,7 +4,7 @@ import sql from '../../database';
 
 class PreventivoController{
 
-    /** Obtener todos los preventivos */
+    /** Obtener todos los preventivos; si existe un operario asociado a ese preventivo, lo mostrará. En caso contrario, lo mostrará como ninguno y su codigo será 0 */
     public async selectAllPreventivos(req:Request, res:Response){
         const preventivos = await sql.query(`SELECT pre.*, per.Descripcion as 'Periodicidad', 
 		CASE WHEN usu.Codigo IS NULL THEN 0
@@ -21,7 +21,7 @@ class PreventivoController{
         LEFT JOIN [DATOS7QB_ISRI_SPAIN].[dbo].[usuario] usu ON usu.Codigo = po.OperarioId`);
         res.json(preventivos.recordset);
     }
-    /** Obtiene un preventivo en concreto */
+    /** Obtiene el id del último preventivo */
     public async selectLastPreventivo(req:Request, res:Response){
         const area = await sql.query(`SELECT MAX(PreventivoId) AS id FROM Preventivo`);
         res.json(area.recordset[0].id);

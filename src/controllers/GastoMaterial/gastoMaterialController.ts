@@ -16,7 +16,7 @@ class GastoMaterialController {
         res.status(200).json(gasto.recordset)
     }
 
-    //Elimina un gasto 
+    //Elimina un gasto;  elimina de la tabla donde se guardan los gastos y además de la tabla donde se asocia el gasto a una orden
     public async deleteGastoMaterialOrden(req: Request, res: Response) {
         try {
             await sql.query(`

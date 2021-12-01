@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class UbicacionController{
-
+    //Obtiene las ubicaciones técnicas de una determinada planta, area, zona, sección, código, grupo o equipo
     public async selectUbicaciones(req:Request, res:Response):Promise<any>{
     try{
         let consulta = `select p.Denominacion as 'Planta',

@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class GrupoController{
+    //Obtiene los grupos de un determinado código pasado por parámetro
     public async selectGrupos(req: Request, res: Response):Promise<any> {
         try {
             const grupos = await sql.query(`select * from grupo where codigoid = '${req.params.codigoid}'`);
@@ -15,6 +16,7 @@ class GrupoController{
             console.log(error)
         }
     }
+    //Añade un grupo a un determinado código pasado por parámetro
     public async addGrupo(req:Request, res:Response):Promise<void>{
         try{
             await sql.query(`insert into grupo(Denominacion, Descripcion, CodigoId) values('${req.body.Denominacion}', '${req.body.Descripcion}', '${req.body.CodigoId}')`);
@@ -24,6 +26,7 @@ class GrupoController{
             console.log(error)
         }
     }
+    //Actualiza el grupo pasado por parámetro
     public async updateGrupo(req:Request, res:Response):Promise<void>{
         try{
         await sql.query(`UPDATE grupo SET Denominacion = '${req.body.Denominacion}', Descripcion = '${req.body.Descripcion}' WHERE grupoid='${req.params.grupoid}'`);
@@ -32,6 +35,7 @@ class GrupoController{
             res.json(error)
         }
     }
+    //Elimina un grupo pasado por parámetro
     public async deleteGrupo(req:Request, res:Response):Promise<void>{
         try{
             await sql.query(`delete from grupo where grupoid='${req.params.grupoid}'`);

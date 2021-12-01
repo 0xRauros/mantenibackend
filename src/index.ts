@@ -35,8 +35,10 @@ class Server {
         this.app = express();
         this.config();
         this.routes();
+        //Se crea un cronjob con hora 06:00
         this.cronJob = new CronJob('0 6 * * *', async () => {
             try{
+                //Cada día a la misma hora se ejecutará
                 await this.ejecucion();
             }catch(e){
                 console.error(e)
@@ -89,16 +91,17 @@ class Server {
 
         try{
 
+            //Obtiene los preventivos 
             const preventivos = await ordenes.obtenerPreventivos();
 
+            //Recorre los preventivos 
             for(let i=0; i<preventivos.length; i++){
     
                 let preventivoId = preventivos[i].UtPrevId
-    
+                //Por cada preventivo se obtiene la fecha validado de la orden de trabajo asociada si la tuviera o su fecha de inicio
                 let fechas = await ordenes.obtenerFechas(preventivoId)
     
                 let fecha!:Date
-
                 if (fechas.hasOwnProperty('FechaValidado')) {
 
                     if (fechas.FechaValidado !== null) {
@@ -122,9 +125,8 @@ class Server {
                 fecha.setHours(0,0,0,0);
 
                 if(fecha.getTime() == this.hoy.getTime()){
-                    //Hoy tendrá que crear OT
+                    //Si la fecha del preventivo es hoy tendrá que crear OT
                     let id = await ordenes.crearOT(preventivoId)
-                    console.log('Orden Creada')
                     await ordenes.asociarPreventivoAOT(preventivoId, id.id)
                     await ordenes.crearTareasDeOt(id.id)
                }

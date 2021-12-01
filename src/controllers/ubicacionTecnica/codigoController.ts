@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import sql from '../../database';
 
 class CodigoController {
+    //Obtiene los codigos de una seccion determinada por parámetro
     public async selectCodigos(req: Request, res: Response):Promise<any>{
         try {
             const codigo = await sql.query(`select * from codigo where seccionid = '${req.params.seccionid}'`);
@@ -14,6 +15,7 @@ class CodigoController {
             res.json(error)
         }
     }
+    //Añade un codigo a la tabla
     public async addCodigo(req: Request, res: Response):Promise<void>{
         try{
             await sql.query(`insert into codigo(Denominacion, Descripcion, SeccionId) values('${req.body.Denominacion}', '${req.body.Descripcion}', '${req.body.SeccionId}')`);
@@ -24,6 +26,7 @@ class CodigoController {
             console.log(error)
         }
     }
+    //Actualiza el codigo determinado por parámetro
     public async updateCodigo(req: Request, res: Response):Promise<void>{
         try{
         await sql.query(`update codigo set Denominacion = '${req.body.Denominacion}', Descripcion = '${req.body.Descripcion}' where CodigoId='${req.params.codigoid}'`);
@@ -32,6 +35,8 @@ class CodigoController {
             res.json(error)
         }
     }
+
+    //Elimina el codigo determinado por parámetro
     public async deleteCodigo(req: Request, res: Response):Promise<void>{
         try{
         await sql.query(`DELETE FROM codigo WHERE CodigoId='${req.params.codigoid}'`);
