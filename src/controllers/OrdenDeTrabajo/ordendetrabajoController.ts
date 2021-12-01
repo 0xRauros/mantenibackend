@@ -13,7 +13,7 @@ case when ot.Area is null then p.Descripcion
     end as 'UbicacionTecnica',
     eq.Denominacion as 'Equipo',
     a.Descripcion as 'Localizacion',
-    da.Nombre as 'PersonaResponsable',
+    db.Nombre as 'PersonaResponsable',
     ot.PersonaResponsable as 'PersonaResponsableId',
 	e.Descripcion as 'Estado',
     ot.EstadoId,
