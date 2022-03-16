@@ -36,7 +36,7 @@ class Server {
     this.routes();
     //Se crea un cronjob con hora 06:00
 
-    this.cronJob = new CronJob("34 8 * * *", async () => {
+    this.cronJob = new CronJob("1 8/24 * * *", async () => {
       try {
         //Cada día a la misma hora se ejecutará
         await this.ejecucion();
@@ -87,10 +87,10 @@ class Server {
   }
   async ejecucion() {
     try {
-
+      
       //Obtiene los preventivos
       const preventivos = await ordenes.obtenerPreventivos();
-
+      console.log ('salto')
       //Recorre los preventivos
       for (let i = 0; i < preventivos.length; i++) {
         let preventivoId = preventivos[i].UtPrevId;
@@ -119,7 +119,11 @@ class Server {
         this.hoy.setHours(0, 0, 0, 0);
         fecha.setHours(0, 0, 0, 0);
 
-        if (fecha.getTime() == this.hoy.getTime()) {
+        console.log('TODAS',fecha)
+
+        if (fecha.getTime() <= this.hoy.getTime()) {
+          console.log("entra")
+          console.log ("entra", this.hoy.getTime)
           //Si la fecha del preventivo es hoy tendrá que crear OT
           let id = await ordenes.crearOT(preventivoId);
           await ordenes.asociarPreventivoAOT(preventivoId, id.id);

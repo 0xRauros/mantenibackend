@@ -5,7 +5,6 @@ class Ordenes {
     //Obtiene los id de los preventivos
     public async obtenerPreventivos() {
         const preventivos = await sql.query(`SELECT UtPrevId FROM UT_Preventivo`)
-
         return preventivos.recordset;
     }
     //Obtiene las fechas, si ese preventivo tiene una orden de trabajo asociada, obtendrá su fecha validado. En caso contrario, obtendrá la fecha de inicio
