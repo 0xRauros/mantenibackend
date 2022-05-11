@@ -18,15 +18,10 @@ import operarioRoutes from "./routes/Operario/operarioRoutes";
 import prioridadRouters from "./routes/Prioridad/prioridadRouters";
 import materialesRoutes from "./routes/Materiales/materialesRoutes";
 
-import { CronJob } from "cron";
 import ordenes from "./crearOrdenes/ordenes";
 import estadosRoutes from "./routes/Estados/estadosRoutes";
 import periodicidadRoutes from "./routes/Periodicidad/periodicidadRoutes";
 import gastoMaterialRoutes from "./routes/GastoMaterial/gastoMaterialRoutes";
-
-
-// ---- Conjonb ----
-const Bree = require('bree');
 
 // --------------------
 
@@ -34,40 +29,21 @@ class Server {
   public app: Application;
   hoy: Date = new Date();
 
-  cronJob: CronJob;
+  // cronJob: CronJob;
 
   constructor() {
     this.app = express();
     this.config();
     this.routes();
-    //Se crea un cronjob con hora 06:00
 
-    const bree = new Bree({
-      jobs: [
-    
-        {
-        name: 'ejecucion',
-        cron: '47 16 * * *'
-      }
-    ]
-    });
-
-    bree.start();
-
-
-    this.cronJob = new CronJob("47 8 * * *", async () => {
+    setInterval(async () => { // cada 24 horas
       try {
-        //Cada día a la misma hora se ejecutará "1 8/24 * * *"
+        console.log("Inicio de ejecucion de ordenes");
         await this.ejecucion();
       } catch (e) {
-        console.error(e);
-        console.log("ERROR");
+        console.log("Error de ejecucion" + e);
       }
-    });
-
-    if (!this.cronJob.running) {
-      this.cronJob.start();
-    }
+    }, 86400000);
   }
 
   config(): void {
@@ -104,14 +80,14 @@ class Server {
     this.app.listen(this.app.get("port"), () => {
       console.log("Server on port ", this.app.get("port"));
     });
-    
   }
+
   async ejecucion() {
     try {
-      
+      console.log("entra a ejecucion");
       //Obtiene los preventivos
       const preventivos = await ordenes.obtenerPreventivos();
-      console.log ('salto')
+      console.log("salto");
       //Recorre los preventivos
       for (let i = 0; i < preventivos.length; i++) {
         let preventivoId = preventivos[i].UtPrevId;
@@ -123,7 +99,7 @@ class Server {
           if (fechas.FechaValidado !== null) {
             fecha = new Date(fechas.FechaValidado);
             fecha.setDate(fecha.getDate() + fechas.Dias);
-            
+
             //La OT estará VALIDADA y se utilizará la fecha
           } else {
             //Aquí la OT estará abierta sin VALIDAR
@@ -141,20 +117,20 @@ class Server {
         this.hoy.setHours(0, 0, 0, 0);
         fecha.setHours(0, 0, 0, 0);
 
-        console.log('TODAS', fecha)
+        console.log(preventivoId, fecha);
 
         if (fecha.getTime() <= this.hoy.getTime()) {
-
-          console.log ("entra", this.hoy.getTime())
+          console.log("entra", this.hoy.getTime());
           //Si la fecha del preventivo es hoy tendrá que crear OT
           let id = await ordenes.crearOT(preventivoId);
           await ordenes.asociarPreventivoAOT(preventivoId, id.id);
           await ordenes.crearTareasDeOt(id.id);
-          console.log('Creadas OTS ',this.hoy.getDay());
+          console.log("Creadas OTS ", this.hoy.getDay());
         }
       }
+      console.log("fin de ejecucion");
     } catch (e) {
-      console.error("Red flag"+e);
+      console.error("Red flag" + e);
     }
   }
 }
