@@ -24,6 +24,12 @@ import estadosRoutes from "./routes/Estados/estadosRoutes";
 import periodicidadRoutes from "./routes/Periodicidad/periodicidadRoutes";
 import gastoMaterialRoutes from "./routes/GastoMaterial/gastoMaterialRoutes";
 
+
+// ---- Conjonb ----
+const Bree = require('bree');
+
+// --------------------
+
 class Server {
   public app: Application;
   hoy: Date = new Date();
@@ -36,15 +42,29 @@ class Server {
     this.routes();
     //Se crea un cronjob con hora 06:00
 
-    this.cronJob = new CronJob("1 8/24 * * *", async () => {
+    const bree = new Bree({
+      jobs: [
+    
+        {
+        name: 'ejecucion',
+        cron: '47 16 * * *'
+      }
+    ]
+    });
+
+    bree.start();
+
+
+    this.cronJob = new CronJob("47 8 * * *", async () => {
       try {
-        //Cada día a la misma hora se ejecutará
+        //Cada día a la misma hora se ejecutará "1 8/24 * * *"
         await this.ejecucion();
       } catch (e) {
         console.error(e);
         console.log("ERROR");
       }
     });
+
     if (!this.cronJob.running) {
       this.cronJob.start();
     }
@@ -84,6 +104,7 @@ class Server {
     this.app.listen(this.app.get("port"), () => {
       console.log("Server on port ", this.app.get("port"));
     });
+    
   }
   async ejecucion() {
     try {
@@ -102,6 +123,7 @@ class Server {
           if (fechas.FechaValidado !== null) {
             fecha = new Date(fechas.FechaValidado);
             fecha.setDate(fecha.getDate() + fechas.Dias);
+            
             //La OT estará VALIDADA y se utilizará la fecha
           } else {
             //Aquí la OT estará abierta sin VALIDAR
@@ -119,11 +141,11 @@ class Server {
         this.hoy.setHours(0, 0, 0, 0);
         fecha.setHours(0, 0, 0, 0);
 
-        console.log('TODAS',fecha)
+        console.log('TODAS', fecha)
 
         if (fecha.getTime() <= this.hoy.getTime()) {
-          console.log("entra")
-          console.log ("entra", this.hoy.getTime)
+
+          console.log ("entra", this.hoy.getTime())
           //Si la fecha del preventivo es hoy tendrá que crear OT
           let id = await ordenes.crearOT(preventivoId);
           await ordenes.asociarPreventivoAOT(preventivoId, id.id);
@@ -132,7 +154,7 @@ class Server {
         }
       }
     } catch (e) {
-      console.error(e);
+      console.error("Red flag"+e);
     }
   }
 }
