@@ -49,7 +49,7 @@ class Ordenes {
                 WHERE utp.UtPrevId = ${preventivoId}
             ELSE
             INSERT INTO OrdenDeTrabajo (FechaCreacion, EstadoId, TipoId,PrioridadId, PersonaResponsable, Planta, Area, Zona, Seccion, Codigo, Grupo, Equipo, Preventivo)
-                SELECT CAST(GETDATE() AS date), 1, 1, 2, 2482, utp.Planta, utp.Area, utp.Zona, utp.Seccion, utp.Codigo, utp.Grupo, utp.Equipo, utp.Preventivo from UT_Preventivo utp WHERE utp.UtPrevId = ${preventivoId};
+                SELECT CAST(GETDATE() AS date), 1, 1, 2, 2392, utp.Planta, utp.Area, utp.Zona, utp.Seccion, utp.Codigo, utp.Grupo, utp.Equipo, utp.Preventivo from UT_Preventivo utp WHERE utp.UtPrevId = ${preventivoId};
             SELECT IDENT_CURRENT('OrdenDeTrabajo') as 'id'`)
             return ultimoId.recordset[0];
 
