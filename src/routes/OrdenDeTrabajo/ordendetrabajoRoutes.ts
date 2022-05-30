@@ -16,6 +16,7 @@ class OrdenDeTrabajoRoutes{
         //Correctivo
         this.router.post('/correctivo',ordendetrabajoController.crearCorrectivo)
         this.router.get('/correctivo', ordendetrabajoController.getCorrectivos)
+        this.router.put('/correctivo/:ordenId/:operarioId', ordendetrabajoController.actualizarOperarioDeOrden)
         //General
         this.router.put('/preventivo/planificada/:ordenid', ordendetrabajoController.updatePlanificada);
         this.router.put('/preventivo/pendiente/:ordenid', ordendetrabajoController.updatePendiente);

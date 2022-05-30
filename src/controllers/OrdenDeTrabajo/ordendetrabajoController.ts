@@ -213,11 +213,21 @@ class OrdenDeTrabajoController {
             `)
             res.status(200).json({ message: "Orden eliminada correctamente" })
         } catch (e) {
-            res.status(400).json({ message: e + " Error" })
+            res.status(400).json({ message: e })
             console.error(e)
         }
 
     }
+
+    public async actualizarOperarioDeOrden(req: Request, res: Response) {
+        try {
+            await sql.query(`UPDATE OrdenDeTrabajo SET OperarioId=${req.params.operarioId} WHERE OrdenId=${req.params.ordenId}`)
+            res.status(200).json({ message: "Operario actualizado" })
+        } catch (error) {
+            res.status(400).json({ message: "Error: " + error });
+        }
+    }
+
 }
 const ordendetrabajoController = new OrdenDeTrabajoController();
 export default ordendetrabajoController;
