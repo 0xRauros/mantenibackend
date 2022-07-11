@@ -22,6 +22,8 @@ import ordenes from "./crearOrdenes/ordenes";
 import estadosRoutes from "./routes/Estados/estadosRoutes";
 import periodicidadRoutes from "./routes/Periodicidad/periodicidadRoutes";
 import gastoMaterialRoutes from "./routes/GastoMaterial/gastoMaterialRoutes";
+import empresaExternaRoutes from "./routes/EmpresaExterna/empresaExternaRoutes";
+import planExternaRoutes from "./routes/PlanExterna/planExternaRoutes";
 
 // --------------------
 
@@ -74,6 +76,8 @@ class Server {
     this.app.use("/encabezado", encabezadoRoutes);
     this.app.use("/operario", operarioRoutes);
     this.app.use("/periodicidad", periodicidadRoutes);
+    this.app.use("/empresaexterna", empresaExternaRoutes);
+    this.app.use("/planexterna", planExternaRoutes);
   }
 
   start(): void {

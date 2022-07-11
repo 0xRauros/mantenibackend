@@ -9,9 +9,10 @@ class PeriodicidadRoutes{
     }
     config(){
         this.router.get('/', PeriodicidadController.selectPeriodiciad);
-        this.router.post('/', PeriodicidadController.addPeriodicidad)
-        this.router.put('/:periodicidadid', PeriodicidadController.updatePeriodicidad)
-        this.router.delete('/:periodicidadid', PeriodicidadController.deletePeriodicidad)
+        this.router.post('/', PeriodicidadController.addPeriodicidad);
+        this.router.put('/:periodicidadid', PeriodicidadController.updatePeriodicidad);
+        this.router.delete('/:periodicidadid', PeriodicidadController.deletePeriodicidad);
+        this.router.get('/:id', PeriodicidadController.selectPeriodicidadPorId);
     }
 }
 const periodicidadRoutes = new PeriodicidadRoutes();

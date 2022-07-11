@@ -10,6 +10,15 @@ class PeriodicidadController{
         res.status(200).json(preventivos.recordset);
     }
 
+    public async selectPeriodicidadPorId(req: Request, res: Response) {
+        try {
+            let periodicidades = await sql.query(`SELECT * FROM Periodicidad WHERE PeriodicidadId = ${req.params.id}`)
+            res.status(200).json(periodicidades.recordset);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     public async addPeriodicidad(req:Request, res:Response){
         try{
             await sql.query(`INSERT INTO Periodicidad(Dias, Descripcion) VALUES(${req.body.Dias},'${req.body.Descripcion}')`);
