@@ -15,6 +15,9 @@ class PlanExternaRoutes {
         this.router.post('/', planExternaController.addPlanExterna);
         this.router.put('/:id', planExternaController.updatePlanExterna);
         this.router.delete('/:id', planExternaController.deletePlanExterna);
+        this.router.get('/abiertas', planExternaController.getAllPlanExternasAbiertas);
+        this.router.get('/:id', planExternaController.getAllPlanExternaById);
+        this.router.put('/validar/:id', planExternaController.validarPlanExterna);
     }
 
 }

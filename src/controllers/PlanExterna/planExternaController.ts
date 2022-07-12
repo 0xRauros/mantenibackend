@@ -37,6 +37,46 @@ class PlanExternaController {
         }
     }
 
+        // los campos idPeriodicidad e idEmpresa se muestran con su nombre y descripción. Se han relacionado las tablas. Solo con estado 'ABIERTO'.
+        public async getAllPlanExternasAbiertas(req: Request, res: Response): Promise<any> {
+            try {
+                let planExterna = await sql.query(`
+                SELECT pe.id, ee.Nombre as Empresa, ee.id as idEmpresa, p.Descripcion as Periodicidad, p.PeriodicidadId as idPeriodicidad,
+                        pe.descripcion as Descripcion, pe.fecha as Fecha, pe.estado as Estado
+                FROM plan_externa pe 
+                    INNER JOIN empresa_externa ee
+                        ON pe.idEmpresa = ee.id
+                    INNER JOIN Periodicidad p
+                        ON pe.idPeriodicidad = p.PeriodicidadId
+                WHERE pe.estado = 'abierto'
+                `);
+                res.status(200).json(planExterna.recordset);
+            } catch (err) {
+                res.status(404).json(err);
+                console.log(err);
+            }
+        }
+
+                // los campos idPeriodicidad e idEmpresa se muestran con su nombre y descripción. Se han relacionado las tablas. Solo con estado 'ABIERTO'.
+                public async getAllPlanExternaById(req: Request, res: Response): Promise<any> {
+                    try {
+                        let planExterna = await sql.query(`
+                        SELECT pe.id, ee.Nombre as Empresa, ee.id as idEmpresa, p.Descripcion as Periodicidad, p.PeriodicidadId as idPeriodicidad,
+                                pe.descripcion as Descripcion, pe.fecha as Fecha, pe.estado as Estado, pe.proximaFecha
+                        FROM plan_externa pe 
+                            INNER JOIN empresa_externa ee
+                                ON pe.idEmpresa = ee.id
+                            INNER JOIN Periodicidad p
+                                ON pe.idPeriodicidad = p.PeriodicidadId
+                        WHERE pe.id = ${req.params.id}
+                        `);
+                        res.status(200).json(planExterna.recordset);
+                    } catch (err) {
+                        res.status(404).json(err);
+                        console.log(err);
+                    }
+                }
+
     public async addPlanExterna(req: Request, res: Response): Promise<void> {
         try {
             await sql.query(`
@@ -67,6 +107,16 @@ class PlanExternaController {
             console.log(err);
         }
         
+    }
+
+    public async validarPlanExterna(req: Request, res: Response): Promise<void> {
+        try {
+            await sql.query(`UPDATE plan_externa SET estado = 'cerrado' WHERE id = ${req.params.id}`);
+            res.status(201).json({ message: "Planificación externa actualizada."});
+        } catch (err) {
+            res.status(400).json(err);
+            console.log(err);
+        }
     }
 
     public async deletePlanExterna(req: Request, res: Response): Promise<void> {
