@@ -18,6 +18,7 @@ class PlanExternaRoutes {
         this.router.get('/abiertas', planExternaController.getAllPlanExternasAbiertas);
         this.router.get('/:id', planExternaController.getAllPlanExternaById);
         this.router.put('/validar/:id', planExternaController.validarPlanExterna);
+        this.router.get('/historicofiltrado/:periodicidad/:empresa/:estado', planExternaController.getHistoricoFiltrado);
     }
 
 }
